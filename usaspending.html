@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>USASpending.gov — Case study — Gary Olacsi</title>
+<meta name="description" content="Turning an open database of federal spending into something a journalist, a grant-seeker, or a curious citizen can actually use." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <!-- EDIT: your name -->
+      <a href="index.html" class="brand">Gary Olacsi<span class="dot"></span></a>
+      <nav class="nav" aria-label="Primary">
+        <a class="back-link" href="index.html#work">← All work</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow reveal">Concept study · Federal spending transparency</p>
+        <h1 class="reveal">USASpending.gov</h1>
+        <p class="hero-lede reveal">Turning an open database of federal spending into something a journalist, a grant-seeker, or a curious citizen can actually use.</p>
+        <p class="readout reveal" style="margin-top:20px;">A self-directed concept study · Not affiliated with or endorsed by the U.S. Department of the Treasury</p>
+
+        <div class="hero-meta reveal">
+          <div class="cell"><span class="k">Role</span><span class="v">Lead, design &amp; research</span></div>
+          <div class="cell"><span class="k">Methods</span><span class="v">Audit · Research · IA · Hi-fi</span></div>
+          <div class="cell"><span class="k">Focus</span><span class="v">Public spending data</span></div>
+          <div class="cell"><span class="k">Format</span><span class="v">Concept study</span></div>
+        </div>
+
+      </div>
+      <!-- EDIT: replace the span with <img src="images/usaspending-hero.png" alt="..."> -->
+      <div class="wrap-wide">
+        <div class="shot cs-shot reveal"><span><img src="images/usaspending-hero.png" alt="USASpending.gov redesign key screen" /></span></div>
+      </div>
+    </section>
+
+    <!-- ===== OVERVIEW ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">Overview</p>
+          <h2>The context</h2>
+        </div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p>USASpending.gov is the official source for data on how the federal government spends public money. The dataset is comprehensive and genuinely open, but the experience is organized around the shape of the database rather than the questions people arrive with.</p>
+          <p>This self-directed study reimagines the platform around those questions, keeping the same underlying data while changing the path to it.</p>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- ===== PROBLEM ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">The problem</p>
+          <h2>Open, but not legible</h2>
+        </div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p>The site rewards people who already speak its language. Search assumes you know the taxonomy (awarding agency, recipient, NAICS code), and the default mental model is query-building, not exploration.</p>
+          <p>For the audiences the data is meant to serve, that is a wall. The information is present but not legible, so transparency stops at availability and never reaches understanding. Here are some example violations from the Usability/Heuristic Audit.</p>
+        </div>
+        <!-- EDIT: replace the span with <img src="images/usaspending-problem-issues.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/usaspending-problem-issues.png" alt="..."> --></span></div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p></p>
+          <p></p>
+        </div>
+        <!-- EDIT: replace the span with <img src="images/usaspending-problem-issues0.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/usaspending-problem-issues0.png" alt="..."> --></span></div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p></p>
+          <p></p>
+        </div>
+
+        <!-- EDIT: replace the span with <img src="images/usaspending-problem-issues1.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/usaspending-problem-issues1.png" alt="..."> --></span></div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p></p>
+          <p></p>
+        </div>
+        
+      </div>
+      
+    </section>
+
+    <!-- ===== RESEARCH ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">Research</p>
+          <h2>Who it's for, and what stops them</h2>
+          <p>I ran a heuristic evaluation against established usability principles, then modeled the people who come to public spending data and what defeats them. The recurring failures clustered around orientation, jargon, and the absence of any narrative scaffolding.</p>
+        </div>
+        <!-- EDIT: swap in your real personas, goals, and pain points -->
+        <div class="persona-grid reveal">
+          <article class="persona">
+            <h3 class="role">Investigative journalist</h3>
+            <p class="tagline">Following the money</p>
+            <dl>
+              <dt>Goal</dt><dd>Trace contracts and agencies fast enough to verify a story on deadline.</dd>
+              <dt>Frustration</dt><dd>Has to already know the taxonomy before the search box is useful.</dd>
+            </dl>
+          </article>
+          <article class="persona">
+            <h3 class="role">Nonprofit grant-seeker</h3>
+            <p class="tagline">Finding the funding</p>
+            <dl>
+              <dt>Goal</dt><dd>Discover relevant federal programs and who has received them.</dd>
+              <dt>Frustration</dt><dd>No way to browse by need or program, only by exact identifiers.</dd>
+            </dl>
+          </article>
+          <article class="persona">
+            <h3 class="role">Civic researcher / student</h3>
+            <p class="tagline">Seeing the whole picture</p>
+            <dl>
+              <dt>Goal</dt><dd>Grasp where money goes at a high level before going deep.</dd>
+              <dt>Frustration</dt><dd>Dropped straight into raw tables with no story to anchor them.</dd>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== INFORMATION ARCHITECTURE ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">Information architecture</p>
+          <h2>The moves that matter</h2>
+        </div>
+        <ol class="steps reveal">
+          <li><h4>Enter by question, not by table</h4><p>A guided "where does the money go?" entry point replaces the query-builder as the front door.</p></li>
+          <li><h4>Progressive disclosure</h4><p>Plain-language summaries first, with the full records one deliberate step deeper for those who need them.</p></li>
+          <li><h4>Consistent, human labels</h4><p>One vocabulary across the site, defined in place, so a term means the same thing everywhere it appears.</p></li>
+          <li><h4>Shareable views</h4><p>Any exploration can be saved and linked, so a journalist or analyst can hand someone the exact view.</p></li>
+        </ol>
+        <!-- EDIT: drop your sitemap / IA diagram here -->
+        <!-- EDIT: replace the span with <img src="images/usaspending-problem-issues1.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/usaspending-ia-sitemap.png" alt="..."> --></span></div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p></p>
+          <p></p>
+        
+        </div>
+
+    </section>
+
+    <!-- ===== DESIGN ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">Design</p>
+          <h2>The high-fidelity direction</h2>
+        </div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p>The high-fidelity direction leads with narrative: a landing built around the questions people ask, then faceted exploration that stays in plain language, and record pages that explain a contract before they tabulate it.</p>
+          <p>The visual system keeps the data calm and scannable, using hierarchy and annotation to carry meaning rather than leaving it to the reader to assemble.</p>
+        </div>
+        <!-- EDIT: replace the span with <img src="images/usaspending-problem-issues0.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/usaspending-homepage-redesign anno.png" alt="..."> --></span></div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p></p>
+          <p></p>
+        </div>
+        <!-- EDIT: replace the span with <img src="images/usaspending-problem-issues2.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/usaspending-search-redesign.png" alt="..."> --></span></div>
+        <!-- EDIT: replace the span with <img src="images/usaspending-problem-issues2.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/usaspending-AgencyDash.png" alt="..."> --></span></div>
+      </div>
+
+      </div>
+    </section>
+
+    <!-- ===== OUTCOME ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">Outcome</p>
+          <h2>What it argues</h2>
+        </div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p>The redesign is a proposal, not a shipped product. Its argument is simple: transparency is an interaction problem, not a data problem. Open access only counts as transparency once comprehension follows, and that last step is design work.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FULL REPORT ===== -->
+    <section class="report">
+      <div class="wrap">
+        <div class="report-card reveal">
+          <div class="rc-text">
+            <p class="eyebrow">Full report</p>
+            <h2>Read the complete case study</h2>
+            <p>The extended report walks through the full heuristic audit, research, information architecture, and design rationale in depth.</p>
+          </div>
+          <!-- EDIT: point href at your report, e.g. reports/usaspending-report.pdf (or an external link) -->
+          <a class="btn accent" href="reports/usaspending-report.pdf">Read the full report  →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGER ===== -->
+    <nav class="pager" aria-label="More case studies">
+      <div class="wrap pager-inner">
+        <a class="prev" href="bls.html"><span class="lbl">← Previous</span>BLS.gov</a>
+        <a class="back-link" href="index.html#work">All work</a>
+        <a class="next" href="pacer.html"><span class="lbl">Next →</span>PACER.gov</a>
+      </div>
+    </nav>
+
+  </main>
+
+  <footer>
+    <div class="wrap foot-inner">
+      <p>© <span id="year"></span> Gary [Lastname]</p>
+      <p>Designed &amp; built from scratch</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    var els = document.querySelectorAll(".reveal");
+    if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      els.forEach(function (el) { io.observe(el); });
+    } else { els.forEach(function (el) { el.classList.add("in"); }); }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PACER.gov — Case study — Gary Olacsi</title>
+<meta name="description" content="Redesigning access to the public record of the federal courts so that finding a case doesn't require already knowing how the courts file one." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <!-- EDIT: your name -->
+      <a href="index.html" class="brand">Gary Olacsi<span class="dot"></span></a>
+      <nav class="nav" aria-label="Primary">
+        <a class="back-link" href="index.html#work">← All work</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow reveal">Concept study · Federal court records</p>
+        <h1 class="reveal">PACER.gov</h1>
+        <p class="hero-lede reveal">Redesigning access to the public record of the federal courts so that finding a case doesn't require already knowing how the courts file one.</p>
+        <p class="readout reveal" style="margin-top:20px;">A self-directed concept study · Not affiliated with or endorsed by the Administrative Office of the U.S. Courts</p>
+
+        <div class="hero-meta reveal">
+          <div class="cell"><span class="k">Role</span><span class="v">Lead, design &amp; research</span></div>
+          <div class="cell"><span class="k">Methods</span><span class="v">Eval · Research · Search/IA · Hi-fi</span></div>
+          <div class="cell"><span class="k">Focus</span><span class="v">Court records access</span></div>
+          <div class="cell"><span class="k">Format</span><span class="v">Concept study</span></div>
+        </div>
+
+      </div>
+      <!-- EDIT: replace the span with <img src="images/pacer-hero.png" alt="..."> -->
+      <div class="wrap-wide">
+        <div class="shot cs-shot reveal"><span><img src="images/pacer-hero.png" alt="PACER.gov redesign key screen" /></span></div>
+      </div>
+    </section>
+
+    <!-- ===== OVERVIEW ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">Overview</p>
+          <h2>The context</h2>
+        </div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p>PACER provides electronic access to records from the U.S. federal courts. It is essential public infrastructure, but its interface and per-page fee model both assume professional familiarity with how the courts work.</p>
+          <p>This study reimagines search, navigation, and cost transparency for the much wider public the record actually belongs to.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROBLEM ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">The problem</p>
+          <h2>Open, but not legible</h2>
+        </div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p>The experience is built for people who already know a case number and a court. Search rewards legal fluency, records are fragmented across courts, and the per-page billing is revealed only after you have committed to a click.</p>
+          <p>Hidden structure and hidden cost are the same usability failure: in both, the system withholds what a person needs to decide what to do next. Here are some example violations from the Usability/Heuristic Audit.</p>
+        </div>
+        <!-- EDIT: replace the span with <img src="images/Pacer-problem-issues.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/Pacer-problem-issues.png" alt="..."> --></span></div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p></p>
+          <p></p>
+        </div>
+        <!-- EDIT: replace the span with <img src="images/Pacer-problem-issues1.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/Pacer-problem-issues1.png" alt="..."> --></span></div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p></p>
+          <p></p>
+        </div>
+        <!-- EDIT: replace the span with <img src="images/Pacer-problem-issues2.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/Pacer-problem-issues2.png" alt="..."> --></span></div>
+      </div>
+
+    </section>
+
+    <!-- ===== RESEARCH ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">Research</p>
+          <h2>Who it's for, and what stops them</h2>
+          <p>I ran an expert evaluation of the search and access flows, then modeled the range of people who depend on the record, from professionals to first-timers representing themselves. The throughline was a system that never orients a newcomer.</p>
+        </div>
+        <!-- EDIT: swap in your real personas, goals, and pain points -->
+        <div class="persona-grid reveal">
+          <article class="persona">
+            <h3 class="role">Pro se litigant</h3>
+            <p class="tagline">Representing myself</p>
+            <dl>
+              <dt>Goal</dt><dd>Find and follow their own case without a lawyer to translate.</dd>
+              <dt>Frustration</dt><dd>Terminology and court structure form a wall before the first result.</dd>
+            </dl>
+          </article>
+          <article class="persona">
+            <h3 class="role">Paralegal</h3>
+            <p class="tagline">Working the docket</p>
+            <dl>
+              <dt>Goal</dt><dd>Pull filings quickly across many cases for the attorneys they support.</dd>
+              <dt>Frustration</dt><dd>Retrieval is slow, repetitive, and metered by the page.</dd>
+            </dl>
+          </article>
+          <article class="persona">
+            <h3 class="role">Court reporter</h3>
+            <p class="tagline">Covering the courts</p>
+            <dl>
+              <dt>Goal</dt><dd>Monitor newsworthy filings as they appear.</dd>
+              <dt>Frustration</dt><dd>No real discovery or alerting, and the cost of browsing adds up fast.</dd>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== INFORMATION ARCHITECTURE ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">Information architecture</p>
+          <h2>The moves that matter</h2>
+        </div>
+        <ol class="steps reveal">
+          <li><h4>One search across courts</h4><p>A unified, plain-language search replaces the court-by-court silos and the assumption of a known case number.</p></li>
+          <li><h4>Cost before the click</h4><p>Any fee is shown in context before a document is opened, so there are no surprises after the fact.</p></li>
+          <li><h4>A readable docket</h4><p>Filings are presented as a navigable case timeline rather than a flat, coded list.</p></li>
+          <li><h4>Alerts and saved searches</h4><p>People who follow cases can be told when something changes instead of paying to re-check.</p></li>
+        </ol>
+        <!-- EDIT: drop your sitemap / IA diagram here -->
+        <!-- EDIT: replace the span with <img src="images/Pacer.gov-ia-sitemap.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/Pacer.gov-ia-sitemap.png" alt="..."> --></span></div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p></p>
+          <p></p>
+
+      </div>
+    </section>
+
+    <!-- ===== DESIGN ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">Design</p>
+          <h2>The high-fidelity direction</h2>
+        </div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p>The high-fidelity direction puts search first, surfaces cost transparently in the interface, and turns the docket into a legible timeline a non-lawyer can follow.</p>
+          <p>Type and spacing do the heavy lifting: dense legal metadata is organized so the important moments in a case are visible at a glance.</p>
+        </div>
+        <!-- EDIT: replace the span with <img src="images/pacer - search - redesign.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/pacer - search - redesign.png" alt="..."> --></span></div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p></p>
+          <p></p>
+        </div>
+        <!-- EDIT: replace the span with <img src="images/pacer - caseDocket - redesign.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/pacer - caseDocket - redesign.png" alt="..."> --></span></div>
+        <!-- EDIT: replace the span with <img src="images/pacer - Court Analytics Dashboard - redesign.png" alt="..."> -->
+        <div class="shot reveal"><span><img src="images/pacer - Court Analytics Dashboard - redesign.png" alt="..."> --></span></div>
+      </div>
+    </section>
+
+    <!-- ===== OUTCOME ===== -->
+    <section class="band">
+      <div class="wrap">
+        <div class="band-head reveal">
+          <p class="eyebrow">Outcome</p>
+          <h2>What it argues</h2>
+        </div>
+        <div class="prose reveal" style="margin-top:26px;">
+          <p>The redesign is a proposal. Its argument: for public infrastructure, predictability is a feature. When structure and cost are both visible up front, the record becomes usable by the public that owns it, not just the profession that navigates it daily.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FULL REPORT ===== -->
+    <section class="report">
+      <div class="wrap">
+        <div class="report-card reveal">
+          <div class="rc-text">
+            <p class="eyebrow">Full report</p>
+            <h2>Read the complete case study</h2>
+            <p>The extended report walks through the full heuristic audit, research, information architecture, and design rationale in depth.</p>
+          </div>
+          <!-- EDIT: point href at your report, e.g. reports/pacer-report.pdf (or an external link) -->
+          <a class="btn accent" href="reports/pacer-report.pdf">Read the full report (PDF) →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGER ===== -->
+    <nav class="pager" aria-label="More case studies">
+      <div class="wrap pager-inner">
+        <a class="prev" href="usaspending.html"><span class="lbl">← Previous</span>USASpending.gov</a>
+        <a class="back-link" href="index.html#work">All work</a>
+        <a class="next" href="bls.html"><span class="lbl">Next →</span>BLS.gov</a>
+      </div>
+    </nav>
+
+  </main>
+
+  <footer>
+    <div class="wrap foot-inner">
+      <p>© <span id="year"></span> Gary [Lastname]</p>
+      <p>Designed &amp; built from scratch</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    var els = document.querySelectorAll(".reveal");
+    if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      els.forEach(function (el) { io.observe(el); });
+    } else { els.forEach(function (el) { el.classList.add("in"); }); }
+  </script>
+
+</body>
+</html>

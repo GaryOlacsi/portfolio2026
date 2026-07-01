@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gary Olacsi - BLS.gov Data Explorer Redesign · UX Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16241F; --ink-soft:#3F4D47; --ink-mute:#6A746E;
+    --deep:#0F6E56; --deep-2:#0A5644; --deep-3:#073A2D;
+    --mint:#5DCAA5; --mint-pale:#E1F5EE; --mint-line:#BEE5D6;
+    --purple:#534AB7; --purple-pale:#EEEDFE; --purple-line:#D7D3F4;
+    --amber:#C2710C; --blue:#1E6FB0;
+    --paper:#FCFCFA; --sand:#F2F0E9; --sand-2:#F8F8F4;
+    --line:#E3E2DB;
+    --crit-bg:#FCEBEB; --crit-ink:#9E3030; --crit-line:#F0CFCF;
+    --major-bg:#FAEEDA; --major-ink:#8A5306; --major-line:#ECD7B0;
+    --minor-bg:#EAF3DE; --minor-ink:#3F6116; --minor-line:#D2E4BC;
+    --pos:#137A4E; --neg:#B5402F;
+    --serif:"Fraunces",Georgia,serif;
+    --sans:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+    --wrap:1300px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+  p{margin:0 0 1.1em;}
+  a{color:var(--deep);}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 48px;}
+  @media(max-width:760px){.wrap{padding:0 22px;}}
+
+  /* ---------- top nav ---------- */
+  .topbar{position:sticky;top:0;z-index:60;background:rgba(252,252,250,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:24px;}
+  .brand{font-family:var(--serif);font-weight:600;font-size:18px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;}
+  .brand .dot{width:9px;height:9px;border-radius:2px;background:var(--deep);display:inline-block;}
+  .navlinks{display:flex;gap:24px;font-size:13.5px;font-weight:500;}
+  .navlinks a{color:var(--ink-soft);text-decoration:none;transition:color .18s;}
+  .navlinks a:hover{color:var(--deep);}
+  .navtag{font-family:var(--mono);font-size:11.5px;color:var(--ink-mute);letter-spacing:.02em;}
+  @media(max-width:880px){.navlinks{display:none;}}
+
+  /* ---------- hero (landscape split) ---------- */
+  .hero{position:relative;overflow:hidden;background:linear-gradient(150deg,#0F6E56 0%,#0A5644 58%,#073A2D 100%);color:#EAF6F1;}
+  .grid-ov{position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:54px 54px;}
+  .spark{position:absolute;inset:0;z-index:1;opacity:.45;}
+  .spark path{fill:none;stroke:var(--mint);stroke-width:1.4;}
+  .spark .area{fill:url(#hg);stroke:none;}
+  .hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center;padding-top:64px;padding-bottom:64px;}
+  .hero .eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--mint);margin-bottom:20px;}
+  .hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(46px,6.4vw,88px);line-height:.95;letter-spacing:-.02em;margin:0 0 6px;color:#fff;}
+  .hero h1 .sub{display:block;color:var(--mint);font-weight:500;font-size:clamp(24px,3.4vw,42px);margin-top:8px;}
+  .hero .lede{max-width:560px;font-size:18px;line-height:1.55;color:#CDE7DD;margin:24px 0 0;}
+  .meta{display:flex;flex-wrap:wrap;gap:18px 48px;margin:34px 0 0;border-top:1px solid rgba(189,229,214,.25);padding-top:24px;}
+  .meta div{font-size:14px;line-height:1.5;}
+  .meta .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mint);display:block;margin-bottom:3px;}
+  .meta .v{color:#E7F4EE;}
+
+  /* hero teaser mock */
+  .teaser{background:#fff;border-radius:12px;box-shadow:0 30px 70px -24px rgba(0,0,0,.55),0 4px 14px rgba(0,0,0,.2);overflow:hidden;color:var(--ink);transform:perspective(1600px) rotateY(-7deg) rotateX(2deg);transform-origin:left center;}
+  .teaser .bar{display:flex;align-items:center;gap:7px;padding:10px 14px;background:#F1F3F2;border-bottom:1px solid #E2E5E3;}
+  .teaser .bar i{width:9px;height:9px;border-radius:50%;background:#D6DAD8;display:inline-block;}
+  .teaser .url{margin-left:8px;font-family:var(--mono);font-size:10.5px;color:#7C847F;background:#fff;border:1px solid #E2E5E3;border-radius:5px;padding:3px 9px;}
+  .teaser .tbody{padding:16px;}
+  .teaser .tlabel{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:10px;}
+  .teaser .kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+  .tk{border:1px solid var(--line);border-radius:8px;padding:10px 11px;}
+  .tk .lab{font-size:9.5px;color:var(--ink-mute);font-weight:600;letter-spacing:.02em;text-transform:uppercase;}
+  .tk .val{font-family:var(--serif);font-weight:600;font-size:23px;line-height:1.1;margin-top:3px;}
+  .tk .dl{font-size:10px;font-weight:700;margin-top:1px;}
+  .tk .ctx{font-size:9px;color:var(--ink-mute);margin-top:5px;}
+  .up{color:var(--neg);}.down{color:var(--pos);}
+  @media(max-width:920px){.hero .wrap{grid-template-columns:1fr;gap:40px;}.teaser{transform:none;max-width:520px;}}
+
+  /* ---------- stat strip ---------- */
+  .stats{position:relative;z-index:2;background:var(--mint-pale);border-top:3px solid var(--deep);}
+  .stats .row{display:grid;grid-template-columns:repeat(6,1fr);max-width:var(--wrap);margin:0 auto;}
+  .stat{padding:24px 18px;text-align:center;border-right:1px solid var(--mint-line);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:var(--serif);font-weight:600;font-size:32px;color:var(--purple);line-height:1;letter-spacing:-.02em;}
+  .stat .lbl{font-size:12px;color:var(--ink-soft);margin-top:7px;line-height:1.3;}
+  @media(max-width:760px){.stats .row{grid-template-columns:repeat(3,1fr);}.stat:nth-child(3){border-right:none;}.stat:nth-child(-n+3){border-bottom:1px solid var(--mint-line);}}
+
+  /* ---------- sections ---------- */
+  section{padding:78px 0;border-bottom:1px solid var(--line);}
+  .sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:10px;}
+  .sec-num{font-family:var(--mono);font-size:14px;color:var(--purple);font-weight:500;letter-spacing:.05em;padding-top:6px;}
+  h2{font-family:var(--serif);font-weight:600;font-size:clamp(30px,3.6vw,44px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink);}
+  .intro{max-width:760px;font-size:18px;color:var(--ink-soft);margin-top:8px;}
+  h3{font-family:var(--serif);font-weight:600;font-size:26px;letter-spacing:-.01em;margin:0 0 14px;color:var(--deep-2);}
+  h3 .sn{font-family:var(--mono);font-size:16px;color:var(--purple);font-weight:500;margin-right:10px;}
+  h4{font-family:var(--sans);font-weight:700;font-size:13.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);margin:34px 0 14px;}
+
+  /* landscape two-col rows */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:start;}
+  @media(max-width:900px){.split{grid-template-columns:1fr;gap:30px;}}
+
+  /* ---------- callouts ---------- */
+  .callout{border-radius:10px;padding:24px 26px;margin:30px 0;}
+  .callout .ct{font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:9px;}
+  .callout p:last-child{margin-bottom:0;}
+  .callout.thesis{background:var(--mint-pale);border:1px solid var(--mint-line);}
+  .callout.thesis .ct{color:var(--deep);}
+  .callout.insight{background:var(--mint-pale);border-left:4px solid var(--deep);border-radius:4px;}
+  .callout.insight .ct{color:var(--deep-2);}
+  .callout.tension{background:var(--purple-pale);border:1px solid var(--purple-line);}
+  .callout.tension .ct{color:var(--purple);}
+  .callout.note{background:var(--sand);border:1px solid var(--line);}
+  .callout.note .ct{color:var(--ink-mute);}
+
+  /* ---------- heuristic table ---------- */
+  .heur{margin-top:26px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .heur-row{display:grid;grid-template-columns:104px 1.4fr 2.5fr 2.3fr;border-top:1px solid var(--line);}
+  .heur-row:first-child{border-top:none;}
+  .heur-head{background:var(--deep);color:#fff;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+  .heur-head>div{padding:13px 16px;}
+  .heur-cell{padding:15px 16px;font-size:14.5px;line-height:1.5;border-left:1px solid var(--line);}
+  .heur-cell:first-child{border-left:none;}
+  .hid{font-weight:700;font-size:15px;}
+  .sev{display:inline-block;margin-top:5px;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:4px;}
+  .crit .hid{color:var(--crit-ink);}.crit .sev{background:var(--crit-bg);color:var(--crit-ink);}
+  .crit .heur-cell:first-child{background:var(--crit-bg);}
+  .major .hid{color:var(--major-ink);}.major .sev{background:var(--major-bg);color:var(--major-ink);}
+  .major .heur-cell:first-child{background:var(--major-bg);}
+  .minor .hid{color:var(--minor-ink);}.minor .sev{background:var(--minor-bg);color:var(--minor-ink);}
+  .minor .heur-cell:first-child{background:var(--minor-bg);}
+  .hfix{color:var(--ink-soft);}
+  .colhead{display:none;}
+  @media(max-width:760px){.heur-head{display:none;}.heur-row{grid-template-columns:1fr;}.heur-cell{border-left:none;border-top:1px solid var(--line);}.heur-row .heur-cell:first-child{border-top:none;}.colhead{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:4px;}}
+
+  /* ---------- personas (landscape 2-up) ---------- */
+  .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px;}
+  .pgrid.secondary{grid-template-columns:1fr;}
+  .persona{display:grid;grid-template-columns:120px 1fr;background:var(--sand);border-radius:10px;overflow:hidden;}
+  .persona .av{padding:22px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .persona .av .initials{font-family:var(--serif);font-weight:600;font-size:28px;line-height:1;}
+  .persona .av .tier{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:6px;color:var(--ink-mute);}
+  .persona .body{padding:20px 22px;background:var(--sand-2);}
+  .persona .pname{font-family:var(--serif);font-weight:600;font-size:21px;color:var(--ink);margin-bottom:3px;}
+  .persona .prole{font-size:13px;color:var(--ink-mute);margin-bottom:11px;}
+  .persona .jtbd{font-size:14px;margin-bottom:7px;}
+  .persona .jtbd b,.persona .pain b{color:var(--ink);}
+  .persona .pain{font-size:14px;color:var(--crit-ink);}
+  .av.orange{background:#FAEEDA;}.av.orange .initials{color:#8A5306;}
+  .av.purple{background:#EEEDFE;}.av.purple .initials{color:#534AB7;}
+  .av.green{background:#E1F5EE;}.av.green .initials{color:#0F6E56;}
+  .av.sand{background:#EDEBE2;}.av.sand .initials{color:#5F5E5A;}
+  @media(max-width:900px){.pgrid{grid-template-columns:1fr;}}
+  @media(max-width:560px){.persona{grid-template-columns:1fr;}.persona .av{flex-direction:row;gap:12px;padding:13px;}.persona .av .tier{margin-top:0;}}
+
+  /* ---------- nav model + principles ---------- */
+  .navmodel{margin-top:6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .nm-row{display:grid;grid-template-columns:1fr 1.3fr;border-top:1px solid var(--line);}
+  .nm-row:first-child{border-top:none;}
+  .nm-head{background:var(--deep);color:#fff;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
+  .nm-head>div{padding:13px 18px;}
+  .nm-row>div{padding:14px 18px;font-size:14px;}
+  .nm-row .cur{color:var(--ink-mute);border-right:1px solid var(--line);}
+  .nm-row:nth-child(even):not(.nm-head){background:var(--sand-2);}
+  .nm-row .new{color:var(--purple);font-weight:600;}
+  @media(max-width:560px){.nm-row{grid-template-columns:1fr;}.nm-row .cur{border-right:none;border-bottom:1px dashed var(--line);}}
+  .princ{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .princ .card{background:var(--paper);padding:18px 20px;border-left:3px solid var(--mint);}
+  .princ .card h5{font-family:var(--serif);font-weight:600;font-size:17px;color:var(--deep-2);margin:0 0 6px;}
+  .princ .card p{font-size:13.5px;color:var(--ink-soft);margin:0;line-height:1.5;}
+
+  /* ---------- component lists ---------- */
+  .comp{list-style:none;padding:0;margin:18px 0 0;}
+  .comp li{padding:15px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:210px 1fr;gap:24px;}
+  .comp li:first-child{border-top:none;}
+  .comp .name{font-weight:700;color:var(--deep-2);font-size:15px;}
+  .comp .desc{font-size:14.5px;color:var(--ink-soft);}
+  @media(max-width:620px){.comp li{grid-template-columns:1fr;gap:4px;}}
+
+  /* ---------- decisions ---------- */
+  .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 40px;}
+  .decision{border-top:2px solid var(--mint);padding:20px 0 6px;}
+  .decision .q{font-family:var(--serif);font-weight:600;font-size:20px;color:var(--ink);margin-bottom:8px;letter-spacing:-.01em;}
+  .decision p{margin-bottom:0;color:var(--ink-soft);font-size:15px;}
+  @media(max-width:900px){.dgrid{grid-template-columns:1fr;}}
+
+  /* ---------- outcomes ---------- */
+  .out-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  @media(max-width:820px){.out-grid{grid-template-columns:1fr;gap:8px;}}
+  ul.tick{list-style:none;padding:0;margin:8px 0 0;}
+  ul.tick li{position:relative;padding:9px 0 9px 26px;font-size:14.5px;color:var(--ink-soft);border-bottom:1px solid var(--line);line-height:1.5;}
+  ul.tick li:last-child{border-bottom:none;}
+  ul.tick li:before{content:"";position:absolute;left:2px;top:16px;width:8px;height:8px;border-radius:2px;background:var(--mint);}
+  ul.next li:before{background:var(--purple);}
+  ul.tick li b{color:var(--ink);}
+
+  /* ================= MOCKUPS ================= */
+  .mockwrap{margin:30px 0 8px;}
+  .browser{background:#fff;border:1px solid #DCE0DE;border-radius:13px;overflow:hidden;box-shadow:0 24px 60px -28px rgba(7,58,45,.4),0 3px 10px rgba(0,0,0,.05);}
+  .b-bar{display:flex;align-items:center;gap:8px;padding:11px 16px;background:#EEF1F0;border-bottom:1px solid #DCE0DE;}
+  .b-bar i{width:11px;height:11px;border-radius:50%;display:inline-block;}
+  .b-bar i.r{background:#E5897F;}.b-bar i.y{background:#E6C170;}.b-bar i.g{background:#86C28E;}
+  .b-url{flex:1;margin-left:10px;font-family:var(--mono);font-size:11.5px;color:#5C645F;background:#fff;border:1px solid #DCE0DE;border-radius:6px;padding:5px 12px;display:flex;align-items:center;gap:7px;overflow:hidden;white-space:nowrap;}
+  .b-url svg{flex:none;}
+  .b-url .q{color:#9AA29D;}
+  .b-actions{display:flex;gap:6px;}
+  .b-actions span{font-size:10px;font-weight:600;color:#5C645F;background:#fff;border:1px solid #DCE0DE;border-radius:5px;padding:4px 9px;}
+  .mk-cap{font-size:13px;color:var(--ink-mute);margin:12px 2px 0;display:flex;gap:8px;align-items:baseline;}
+  .mk-cap b{color:var(--deep-2);font-weight:700;}
+  .mk-cap .fixes{font-family:var(--mono);font-size:11px;color:var(--purple);}
+
+  /* app shell shared */
+  .app{font-size:14px;color:var(--ink);}
+  .app-nav{display:flex;align-items:center;gap:0;background:var(--deep);color:#fff;padding:0 20px;height:52px;}
+  .app-nav .logo{font-family:var(--serif);font-weight:600;font-size:17px;margin-right:26px;display:flex;align-items:center;gap:8px;}
+  .app-nav .logo .seal{width:18px;height:18px;border-radius:50%;border:1.6px solid var(--mint);display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-family:var(--sans);font-weight:800;color:var(--mint);}
+  .app-nav a{color:#CFE7DD;text-decoration:none;font-size:13.5px;font-weight:500;padding:0 15px;height:52px;display:flex;align-items:center;border-bottom:3px solid transparent;}
+  .app-nav a.on{color:#fff;border-bottom-color:var(--mint);font-weight:700;}
+  .app-nav .grow{flex:1;}
+  .app-nav .search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:7px;padding:7px 12px;font-size:12.5px;color:#BFE0D4;width:230px;}
+  @media(max-width:760px){.app-nav a:not(.on){display:none;}.app-nav .search{width:130px;}}
+
+  /* dashboard */
+  .dash{padding:22px 24px;background:#FBFBF9;}
+  .dash-h{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+  .dash-h h3{font-family:var(--serif);font-size:23px;margin:0;color:var(--ink);}
+  .dash-h .sub{font-size:12.5px;color:var(--ink-mute);}
+  .dash-h .asof{font-family:var(--mono);font-size:11px;color:var(--ink-mute);}
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 14px;position:relative;}
+  .kpi .lab{font-size:10.5px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:var(--ink-mute);line-height:1.25;min-height:26px;padding-right:56px;}
+  .kpi .val{font-family:var(--serif);font-weight:600;font-size:27px;line-height:1.05;margin-top:4px;letter-spacing:-.01em;}
+  .kpi .dl{font-size:11.5px;font-weight:700;margin-top:1px;display:flex;align-items:center;gap:4px;}
+  .kpi .ctx{font-size:10.5px;color:var(--ink-mute);margin-top:8px;border-top:1px dashed var(--line);padding-top:7px;}
+  .kpi .spk{position:absolute;right:12px;top:13px;opacity:.85;}
+  @media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:520px){.kpis{grid-template-columns:repeat(2,1fr);}.kpi .spk{display:none;}}
+  .dash-low{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+  @media(max-width:900px){.dash-low{grid-template-columns:1fr;}}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+  .panel .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .panel .ph .t{font-weight:700;font-size:13px;color:var(--ink);}
+  .panel .ph .cta{font-size:11px;font-weight:600;color:var(--deep);border:1px solid var(--mint-line);border-radius:5px;padding:3px 8px;background:var(--mint-pale);}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--ink-soft);margin-top:6px;}
+  .legend span{display:flex;align-items:center;gap:5px;}
+  .legend i{width:14px;height:3px;border-radius:2px;display:inline-block;}
+  .legend i.dash{background:none;border-top:2px dashed currentColor;height:0;}
+  /* demographic bars */
+  .dbar{display:flex;align-items:center;gap:9px;margin:9px 0;font-size:12px;}
+  .dbar .nm{width:62px;color:var(--ink-soft);}
+  .dbar .track{flex:1;height:16px;background:#F0F2F0;border-radius:4px;overflow:hidden;}
+  .dbar .fill{height:100%;border-radius:4px;}
+  .dbar .pct{width:34px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;}
+  /* releases list */
+  .rel{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:12.5px;}
+  .rel:first-of-type{border-top:none;}
+  .rel .d{width:42px;text-align:center;}
+  .rel .d .mo{font-size:9px;text-transform:uppercase;color:var(--ink-mute);font-weight:700;letter-spacing:.04em;}
+  .rel .d .dy{font-family:var(--serif);font-size:18px;font-weight:600;line-height:1;}
+  .rel .info{flex:1;line-height:1.3;}
+  .rel .info .nm{font-weight:600;}
+  .rel .info .tm{font-size:10.5px;color:var(--ink-mute);}
+  .rel .badge{font-size:10px;font-weight:700;padding:3px 7px;border-radius:20px;background:var(--mint-pale);color:var(--deep-2);white-space:nowrap;}
+
+  /* explorer */
+  .exp{display:grid;grid-template-columns:248px 1fr;background:#FBFBF9;}
+  @media(max-width:820px){.exp{grid-template-columns:1fr;}}
+  .exp-side{background:#fff;border-right:1px solid var(--line);padding:16px;}
+  .exp-side .sect{margin-bottom:18px;}
+  .exp-side .lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:9px;}
+  .pill{display:flex;align-items:center;gap:8px;background:#F6F7F5;border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:12.5px;margin-bottom:7px;font-weight:600;}
+  .pill .sw{width:11px;height:11px;border-radius:3px;flex:none;}
+  .pill .x{margin-left:auto;color:var(--ink-mute);font-size:14px;}
+  .pill.add{border-style:dashed;color:var(--ink-mute);font-weight:500;background:#fff;justify-content:center;}
+  .srch{display:flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-size:12px;color:var(--ink-mute);}
+  .selrow{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font-size:12px;margin-bottom:7px;}
+  .selrow .v{font-weight:600;color:var(--ink);}
+  .selrow .ch{color:var(--ink-mute);}
+  .tog{display:flex;align-items:center;justify-content:space-between;padding:6px 0;font-size:12.5px;}
+  .switch{width:34px;height:19px;border-radius:20px;position:relative;flex:none;transition:background .15s;}
+  .switch:after{content:"";position:absolute;width:15px;height:15px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .15s;box-shadow:0 1px 2px rgba(0,0,0,.2);}
+  .switch.on{background:var(--deep);}.switch.on:after{left:17px;}
+  .switch.off{background:#CBD0CC;}
+  .exp-main{padding:16px 18px;}
+  .exp-mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+  .modes{display:inline-flex;background:#EEF1F0;border-radius:8px;padding:3px;}
+  .modes b{font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;color:var(--ink-mute);cursor:default;}
+  .modes b.on{background:#fff;color:var(--deep-2);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+  .exp-title{font-family:var(--serif);font-size:18px;font-weight:600;}
+  .chartcard{border:1px solid var(--line);border-radius:10px;background:#fff;padding:14px 14px 6px;}
+  .rev-note{display:flex;align-items:flex-start;gap:8px;font-size:11.5px;color:var(--major-ink);background:var(--major-bg);border:1px solid var(--major-line);border-radius:7px;padding:8px 11px;margin-top:10px;}
+  .permabar{display:flex;align-items:center;gap:8px;margin-top:12px;background:#F6F7F5;border:1px solid var(--line);border-radius:8px;padding:8px 10px;}
+  .permabar .u{flex:1;font-family:var(--mono);font-size:11px;color:#5C645F;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+  .permabar .pb{font-size:11px;font-weight:700;border-radius:6px;padding:6px 11px;}
+  .permabar .pb.primary{background:var(--deep);color:#fff;}
+  .permabar .pb.ghost{background:#fff;border:1px solid var(--line);color:var(--ink-soft);}
+
+  /* releases calendar */
+  .relpage{background:#FBFBF9;padding:18px 22px;}
+  .tabs{display:inline-flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;}
+  .tabs b{font-size:13px;font-weight:600;color:var(--ink-mute);padding:9px 16px;border-bottom:2px solid transparent;margin-bottom:-1px;}
+  .tabs b.on{color:var(--deep-2);border-bottom-color:var(--deep);font-weight:700;}
+  .cal-layout{display:grid;grid-template-columns:1fr 280px;gap:16px;}
+  @media(max-width:900px){.cal-layout{grid-template-columns:1fr;}}
+  .cal{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .cal-h{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line);}
+  .cal-h .mo{font-family:var(--serif);font-size:18px;font-weight:600;}
+  .cal-h .nav{display:flex;gap:6px;}
+  .cal-h .nav b{width:26px;height:26px;border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-size:13px;}
+  .cal-wd{display:grid;grid-template-columns:repeat(5,1fr);background:#F6F7F5;border-bottom:1px solid var(--line);}
+  .cal-wd span{padding:7px 10px;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-mute);}
+  .cal-grid{display:grid;grid-template-columns:repeat(5,1fr);}
+  .cal-cell{min-height:76px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 7px;position:relative;}
+  .cal-cell:nth-child(5n){border-right:none;}
+  .cal-cell .dn{font-size:11px;color:var(--ink-mute);font-weight:600;}
+  .cal-cell.muted{background:#FCFCFB;}
+  .cal-cell.muted .dn{color:#C7CCC8;}
+  .chip{display:flex;align-items:center;gap:5px;font-size:9.5px;font-weight:700;border-radius:5px;padding:3px 5px;margin-top:4px;line-height:1.15;}
+  .chip.major{background:var(--deep);color:#fff;}
+  .chip.mid{background:var(--mint-pale);color:var(--deep-2);}
+  .chip.min{background:var(--sand);color:var(--ink-soft);}
+  .chip .bell{margin-left:auto;opacity:.85;}
+  .alertcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:15px;}
+  .alertcard h5{margin:0 0 4px;font-family:var(--serif);font-size:16px;font-weight:600;}
+  .alertcard .meta{font-size:11.5px;color:var(--ink-mute);margin-bottom:12px;}
+  .altrow{display:flex;align-items:center;gap:9px;padding:9px 0;border-top:1px solid var(--line);font-size:12px;}
+  .altrow:first-of-type{border-top:none;}
+  .altrow .txt{flex:1;line-height:1.3;}
+  .altrow .txt small{color:var(--ink-mute);font-size:10.5px;display:block;}
+  .chan{display:flex;gap:6px;margin-top:13px;}
+  .chan b{flex:1;text-align:center;font-size:11.5px;font-weight:700;border-radius:7px;padding:8px;}
+  .chan b.email{background:var(--deep);color:#fff;}
+  .chan b.sms{background:#fff;border:1px solid var(--line);color:var(--ink-soft);}
+
+  /* ---------- footer ---------- */
+  footer{background:#0B3A2E;color:#CDE7DD;padding:64px 0 56px;border-bottom:none;}
+  footer h2{color:#fff;font-size:28px;}
+  footer .series{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:28px 0 40px;}
+  .scard{display:block;text-decoration:none;border:1px solid rgba(189,229,214,.28);border-radius:9px;padding:20px;transition:border-color .2s,background .2s;}
+  .scard:hover{border-color:var(--mint);background:rgba(93,202,165,.07);}
+  .scard .sn{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--mint);}
+  .scard .st{font-family:var(--serif);font-weight:600;font-size:20px;color:#fff;margin:8px 0 4px;}
+  .scard .sd{font-size:13px;color:#9DC4B7;}
+  .scard.current{background:rgba(93,202,165,.12);border-color:var(--mint);}
+  .foot-meta{border-top:1px solid rgba(189,229,214,.22);padding-top:24px;font-size:13px;color:#85AFA1;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:var(--mono);letter-spacing:.02em;}
+  @media(max-width:620px){footer .series{grid-template-columns:1fr;}}
+
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}.spark .line{stroke-dasharray:none!important;stroke-dashoffset:0!important;transition:none!important;}}
+  :focus-visible{outline:2px solid var(--mint);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>Gary Olacsi - BLS.gov Redesign</div>
+    <nav class="navlinks" aria-label="Section navigation">
+      <a href="#overview">Overview</a>
+      <a href="#audit">Audit</a>
+      <a href="#research">Research</a>
+      <a href="#ia">IA</a>
+      <a href="#mockups">Mockups</a>
+      <a href="#decisions">Decisions</a>
+      <a href="#outcomes">Outcomes</a>
+    </nav>
+    <span class="navtag">Case study 3 of 3</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="grid-ov" aria-hidden="true"></div>
+  <svg class="spark" viewBox="0 0 1440 520" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5DCAA5" stop-opacity=".22"/><stop offset="1" stop-color="#5DCAA5" stop-opacity="0"/></linearGradient></defs>
+    <path class="area" d="M0,400 L96,386 L192,408 L288,330 L384,352 L480,276 L576,300 L672,226 L768,256 L864,192 L960,216 L1056,164 L1152,190 L1248,138 L1344,164 L1440,118 L1440,520 L0,520 Z"/>
+    <path class="line" d="M0,400 L96,386 L192,408 L288,330 L384,352 L480,276 L576,300 L672,226 L768,256 L864,192 L960,216 L1056,164 L1152,190 L1248,138 L1344,164 L1440,118"/>
+  </svg>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">UX Case Study</div>
+      <h1>BLS.gov<span class="sub">Data Explorer Redesign</span></h1>
+      <p class="lede">Redesigning the U.S. Bureau of Labor Statistics public data portal (the authoritative source for CPI, unemployment, wages, and 50+ economic indicators) from a filing cabinet into an analysis tool.</p>
+      <div class="meta">
+        <div><span class="k">Role</span><span class="v">Principal UX Designer </span></div>
+        <div><span class="k">Scope</span><span class="v">Audit, research, IA, hi-fi design</span></div>
+        <div><span class="k">Tools</span><span class="v">Figma, BLS public API</span></div>
+      </div>
+    </div>
+    <div class="teaser" aria-hidden="true">
+      <div class="bar"><i></i><i></i><i></i><span class="url">bls.gov</span></div>
+      <div class="tbody">
+        <div class="tlabel">Economic snapshot &middot; redesigned homepage</div>
+        <div class="kpis">
+          <div class="tk"><div class="lab">Unemployment</div><div class="val">4.1%</div><div class="dl up">&#9650; 0.1pp</div><div class="ctx">Hist. avg 5.7%</div></div>
+          <div class="tk"><div class="lab">CPI &middot; YoY</div><div class="val">3.2%</div><div class="dl down">&#9660; 0.1pp</div><div class="ctx">Fed target 2.0%</div></div>
+          <div class="tk"><div class="lab">Payrolls</div><div class="val">+150K</div><div class="dl down">in line</div><div class="ctx">Avg +183K/mo</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="row">
+      <div class="stat"><div class="num">50+</div><div class="lbl">Economic indicators</div></div>
+      <div class="stat"><div class="num">100yr</div><div class="lbl">Historical depth</div></div>
+      <div class="stat"><div class="num">50</div><div class="lbl">States covered</div></div>
+      <div class="stat"><div class="num">800+</div><div class="lbl">Industry codes</div></div>
+      <div class="stat"><div class="num">6</div><div class="lbl">User archetypes</div></div>
+      <div class="stat"><div class="num">11</div><div class="lbl">Heuristic violations</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- 1. OVERVIEW -->
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Project overview</h2></div>
+    <div class="split" style="margin-top:22px;">
+      <div>
+        <p class="intro" style="margin-top:0;">The Bureau of Labor Statistics is the principal federal agency measuring labor market activity, working conditions, price changes, and productivity in the U.S. economy.</p>
+        <p>Its data, the monthly jobs report, the Consumer Price Index, wage growth, and labor force participation, is cited in news broadcasts, congressional testimony, Federal Reserve policy decisions, and academic research every single day.</p>
+        <p>The BLS public data portal at bls.gov is the only authoritative source for this data. It is used by an estimated 50+ million people per year, ranging from Federal Reserve economists to high school students writing economics papers. Despite this scale and importance, the data explorer tool has not been meaningfully redesigned since approximately 2019, and is widely described by its users as unusable without prior knowledge of BLS data architecture.</p>
+      </div>
+      <div>
+        <p style="margin-top:0;">This project is a portfolio redesign conceived to complement NDA-restricted enterprise SaaS work. BLS.gov was selected for its public data access, its direct civic impact, and the richness of design challenges it presents, ranging from time-series chart composition to demographic data visualization to data release management. This is the third case study in a three-part portfolio series (alongside the USASpending.gov and PACER.gov redesigns) intended to demonstrate range across distinct federal data domains.</p>
+        <div class="callout thesis" style="margin-bottom:0;">
+          <div class="ct">The central thesis</div>
+          <p>BLS was built to publish data, not to help people use it. The entire architecture optimises for data integrity and official record-keeping. The result is a platform that treats series IDs as the primary interface, renders charts without benchmarks, generates downloads without metadata, and has no mechanism for users to receive alerts when the data they monitor is updated. The redesign&rsquo;s goal is to transform a filing cabinet into an analysis tool.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. AUDIT -->
+<section id="audit">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Heuristic audit</h2></div>
+    <p class="intro">I conducted a structured evaluation against Nielsen&rsquo;s 10 Usability Heuristics across 5 core flows: homepage entry, data series lookup, data explorer and chart builder, geographic explorer, and bulk data download. Severity was scored 0 to 4. I identified 4 critical violations, 5 major violations, and 2 minor violations.</p>
+    <div class="heur">
+      <div class="heur-row heur-head"><div>#</div><div>Finding</div><div>Description</div><div>Recommended fix</div></div>
+      <div class="heur-row crit"><div class="heur-cell"><span class="hid">H1</span><br><span class="sev">Critical</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>Series ID barrier</b></div><div class="heur-cell"><span class="colhead">Description</span>The primary data path requires knowing an alphanumeric series ID (e.g. LNS14000000) before any data can be retrieved. Series IDs are not shown next to charts and require a separate lookup tool.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Plain-language indicator picker resolves series IDs invisibly. Users search by name; the system maps to the correct underlying series.</div></div>
+      <div class="heur-row crit"><div class="heur-cell"><span class="hid">H2</span><br><span class="sev">Critical</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>No chart context</b></div><div class="heur-cell"><span class="colhead">Description</span>Charts show only the current value and a time series. No historical average, no recession shading, no policy target bands, no pre-pandemic baseline. A 4.1% unemployment rate has no interpretive context.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Optional context overlays: recession shading (NBER), historical average line, policy target bands, pre-pandemic baseline marker.</div></div>
+      <div class="heur-row crit"><div class="heur-cell"><span class="hid">H3</span><br><span class="sev">Critical</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>No multi-series comparison</b></div><div class="heur-cell"><span class="colhead">Description</span>One chart per indicator. No way to overlay CPI and wages on the same axis, normalise to a base period, or compare a national figure to a state figure. The chart builder produces multiple separate charts, not a comparison view.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Multi-series chart composition: up to 4 series on a shared time axis, optional dual-axis, normalize-to-index toggle.</div></div>
+      <div class="heur-row crit"><div class="heur-cell"><span class="hid">H4</span><br><span class="sev">Critical</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>No release alerts</b></div><div class="heur-cell"><span class="colhead">Description</span>Data release calendar exists only as a static PDF deep in the site. No calendar view, no filtering, no subscribe alerts, no countdown. Journalists poll the website manually on release day.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Visual release calendar with indicator filtering, add-to-calendar export, email and SMS subscribe, and per-indicator next-release countdown.</div></div>
+      <div class="heur-row major"><div class="heur-cell"><span class="hid">H5</span><br><span class="sev">Major</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>Homepage buries data</b></div><div class="heur-cell"><span class="colhead">Description</span>Homepage leads with press releases. The 6 most-requested indicators require 2 to 3 clicks. First-time users have no mental model of available data.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Redesign homepage as an economic snapshot: 6 headline KPI cards with current value, YoY delta, and sparkline, each linking to the full indicator page.</div></div>
+      <div class="heur-row major"><div class="heur-cell"><span class="hid">H6</span><br><span class="sev">Major</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>Demographic lookup complexity</b></div><div class="heur-cell"><span class="colhead">Description</span>Unemployment by race, gender, age, and education are stored in separate sub-series with different series IDs. Comparing Black and white unemployment requires 3 separate lookups.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Demographic filter chips on every indicator page: select race, gender, age, or education to overlay comparison series automatically on the same chart.</div></div>
+      <div class="heur-row major"><div class="heur-cell"><span class="hid">H7</span><br><span class="sev">Major</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>No shareable chart URLs</b></div><div class="heur-cell"><span class="colhead">Description</span>Configuring a custom chart does not update the URL. Sharing the URL sends recipients to a blank default explorer. No permalink, no embed code, no bookmarkable views.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Serialize complete chart state in URL (series, date range, geography, overlays). Share button generates permalink and embed code.</div></div>
+      <div class="heur-row major"><div class="heur-cell"><span class="hid">H8</span><br><span class="sev">Major</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>Revision history invisible</b></div><div class="heur-cell"><span class="colhead">Description</span>BLS regularly revises prior estimates but the site shows only current values. No annotation, no as-published vintage data, no revision magnitude visible.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Revision markers on charts at revision dates. Vintage and as-published data in the download tool. Revision magnitude shown in tooltip.</div></div>
+      <div class="heur-row major"><div class="heur-cell"><span class="hid">H9</span><br><span class="sev">Major</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>Opaque bulk downloads</b></div><div class="heur-cell"><span class="colhead">Description</span>Download produces flat files with cryptic column names, no human-readable headers, no units, no metadata sheet. The data dictionary is a separate unlinked document.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Human-readable headers and metadata sheet in every download. Preview first 50 rows before committing. Inline data dictionary. CSV, JSON, and XLSX options.</div></div>
+      <div class="heur-row minor"><div class="heur-cell"><span class="hid">H10</span><br><span class="sev">Minor</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>Chart accessibility</b></div><div class="heur-cell"><span class="colhead">Description</span>Colour-only encoding, no dash patterns, no aria labels, no keyboard navigation, no view-as-table alternative. A Section 508 compliance gap for a federal platform.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Pair every colour with a dash pattern or marker shape. aria-label on all charts. View-as-table toggle. Full keyboard navigation.</div></div>
+      <div class="heur-row minor"><div class="heur-cell"><span class="hid">H11</span><br><span class="sev">Minor</span></div><div class="heur-cell"><span class="colhead">Finding</span><b>Mobile renders data poorly</b></div><div class="heur-cell"><span class="colhead">Description</span>Data tables require horizontal scrolling through 8 to 12 columns. Charts scale to illegibility. Press release pages bury the headline number in prose.</div><div class="heur-cell hfix"><span class="colhead">Fix</span>Mobile: headline number in a KPI card at top, simplified sparkline, full table behind a tap. Press releases lead with the key number.</div></div>
+    </div>
+    <div class="callout insight">
+      <div class="ct">Key insight</div>
+      <p>H1 (the series ID barrier) affects all 6 user archetypes at high severity, making it the single most democratising fix in the redesign. Replacing the series ID entry point with a plain-language indicator picker is not just a usability improvement; it is the prerequisite for any non-expert user being able to access BLS data at all.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3. RESEARCH -->
+<section id="research">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><h2>User research &amp; personas</h2></div>
+    <p class="intro">I developed 6 personas from a synthesis of journalism workflow research, government economics literature, workforce development practice, and academic data-use studies. They span a wider expertise range than either the USASpending.gov or PACER redesigns: from Federal Reserve-level economists who want vintage data and dual-axis normalised charts, to citizens who need a plain-language benchmark to understand whether 4.1% unemployment is good or bad.</p>
+    <h4>Primary personas</h4>
+    <div class="pgrid">
+      <div class="persona"><div class="av orange"><div class="initials">JL</div><div class="tier">Primary</div></div><div class="body"><div class="pname">Jordan Lee</div><div class="prole">Economics reporter, national wire service, D.C. &middot; Monthly power user</div><div class="jtbd"><b>Jobs to be done:</b> Get the headline number on release day, find demographic breakdowns, embed a shareable chart in 18 minutes.</div><div class="pain"><b>Pain:</b> H4, H8, H6, H7. No release alert, revision invisible, demographic lookups, no permalink.</div></div></div>
+      <div class="persona"><div class="av purple"><div class="initials">RP</div><div class="tier">Primary</div></div><div class="body"><div class="pname">Rashida Patel</div><div class="prole">Senior economist, Congressional Budget Office &middot; Weekly power user</div><div class="jtbd"><b>Jobs to be done:</b> Overlay 3 to 4 indicators on one chart, normalise to a base period, download vintage as-published data.</div><div class="pain"><b>Pain:</b> H3, H2, H8, H1. No multi-series chart, no recession context, no vintage data, opaque series IDs.</div></div></div>
+      <div class="persona"><div class="av green"><div class="initials">TM</div><div class="tier">Primary</div></div><div class="body"><div class="pname">Tomas Mendez</div><div class="prole">Policy analyst, state workforce agency, Phoenix AZ &middot; Weekly user</div><div class="jtbd"><b>Jobs to be done:</b> Compare Arizona indicators to the national average, identify job-gaining industries, build slide-ready charts.</div><div class="pain"><b>Pain:</b> H3, H7, H5. No state-vs-national overlay, no shareable permalink, geographic explorer buried.</div></div></div>
+      <div class="persona"><div class="av sand"><div class="initials">CW</div><div class="tier">Secondary</div></div><div class="body"><div class="pname">Carol Wright</div><div class="prole">Concerned citizen, one-time user &middot; Low data literacy</div><div class="jtbd"><b>Jobs to be done:</b> Understand whether the job market in her industry is improving; verify a statistic from the news.</div><div class="pain"><b>Pain:</b> H5, H2. Homepage press releases assume econ literacy she lacks; no benchmarks to interpret numbers.</div></div></div>
+    </div>
+    <div class="callout tension">
+      <div class="ct">The Jordan / Rashida tension</div>
+      <p>Jordan (the reporter) needs the headline number instantly and a shareable chart within 18 minutes of release. Rashida (the economist) needs multi-series comparison with vintage data and recession shading for a policy report. These represent the speed-versus-depth tension in the design. The resolution, a Quick mode that pre-configures common single-indicator views and a Builder mode that exposes the full multi-series composition surface, gives both users a first-class experience without either paying a tax for the other.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. IA -->
+<section id="ia">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Information architecture</h2></div>
+    <p class="intro">The IA redesign addresses three structural failures: the series ID prerequisite, the absence of a dedicated release management surface, and the fragmentation of demographic data across disconnected sub-series.</p>
+    <div class="split" style="margin-top:30px;">
+      <div>
+        <h3>Navigation model: five sections</h3>
+        <p style="font-size:15px;color:var(--ink-soft);">The five global nav items are organized around user intent.</p>
+        <div class="navmodel">
+          <div class="nm-row nm-head"><div>Current / absent</div><div>Redesigned label &amp; purpose</div></div>
+          <div class="nm-row"><div class="cur">Data Finder (separate app, series ID)</div><div class="new">Explore: chart builder, quick mode, saved views</div></div>
+          <div class="nm-row"><div class="cur">Indicator pages (3 clicks from home)</div><div class="new">Indicators: all series by category, linked to Explore</div></div>
+          <div class="nm-row"><div class="cur">No geographic surface</div><div class="new">Geography: national, state, metro choropleth</div></div>
+          <div class="nm-row"><div class="cur">Static PDF release calendar</div><div class="new">Releases: calendar, alerts, revision history</div></div>
+          <div class="nm-row"><div class="cur">Bulk download (opaque flat files)</div><div class="new">Download: guided export with metadata</div></div>
+        </div>
+      </div>
+      <div>
+        <h3>Four core IA principles</h3>
+        <p style="font-size:15px;color:var(--ink-soft);">Each encodes a structural decision, not a label change.</p>
+        <div class="princ">
+          <div class="card"><h5>Chart Canvas as shared leaf</h5><p>One composition surface reachable from Explore, every Indicator page, and every Geo profile. Pre-loads the series from wherever the user came from. No series ID required.</p></div>
+          <div class="card"><h5>Series IDs resolved invisibly</h5><p>The UI speaks in indicator names. Series IDs are an implementation detail surfaced only in the API reference. No user ever has to type LNS14000000.</p></div>
+          <div class="card"><h5>Releases as first-class nav</h5><p>Data release management elevated from a buried PDF to a primary nav section with calendar view, subscribe alerts, and countdown.</p></div>
+          <div class="card"><h5>Demographics as a filter layer</h5><p>Breakdowns are a persistent filter on every Indicator page and Chart Canvas, not separate series requiring separate lookups. One chip click, not three series IDs.</p></div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:30px;max-width:900px;">The most consequential structural decision is making Chart Canvas a shared leaf node: a single composition surface reachable from the Explore builder, from every Indicator page via an &ldquo;Open in Explorer&rdquo; CTA, and from every Geographic profile. When a user clicks &ldquo;Open in Explorer&rdquo; from the Arizona unemployment page, the chart canvas pre-loads the Arizona unemployment series alongside the national average, with no series ID lookup required. The indicator name resolves to the series ID invisibly.</p>
+  </div>
+</section>
+
+<!-- 5. MOCKUPS -->
+<section id="mockups">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Design solutions</h2></div>
+    <p class="intro">Three high-fidelity interactive surfaces were designed, each directly addressing the heuristic violations and persona needs established in research. Each is shown below as a live, browser-framed mockup.</p>
+
+    <!-- ===== MOCK 1: DASHBOARD ===== -->
+    <h3 style="margin-top:46px;"><span class="sn">5.1</span>Economic snapshot dashboard</h3>
+    <p style="max-width:900px;">The dashboard transforms the BLS homepage from a press release feed into a real-time summary of the six headline indicators. It is the direct response to H5 (most-requested pages buried three levels deep) and H2 (raw numbers with no interpretive context). Every KPI carries a benchmark: a historical average or a policy target answers Carol&rsquo;s &ldquo;is this good or bad?&rdquo; without a single click.</p>
+
+    <div class="mockwrap">
+      <div class="browser">
+        <div class="b-bar"><i class="r"></i><i class="y"></i><i class="g"></i>
+          <span class="b-url"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7CA99A" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>bls.gov</span>
+        </div>
+        <div class="app">
+          <div class="app-nav">
+            <span class="logo"><span class="seal">BLS</span>U.S. Bureau of Labor Statistics</span>
+            <a class="on" href="#mockups">Explore</a><a>Indicators</a><a>Geography</a><a>Releases</a><a>Download</a>
+            <span class="grow"></span>
+            <span class="search"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#BFE0D4" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Search any indicator&hellip;</span>
+          </div>
+          <div class="dash">
+            <div class="dash-h">
+              <div><h3>Economic snapshot</h3><div class="sub">The six most-requested indicators, with context built in.</div></div>
+              <div class="asof">Updated Mar 7, 8:30 AM ET</div>
+            </div>
+            <div class="kpis">
+              <div class="kpi"><div class="lab">Unemployment rate</div><div class="val">4.1%</div><div class="dl up">&#9650; 0.1pp MoM</div><div class="ctx">Hist. avg 5.7%</div>
+                <svg class="spk" width="56" height="20" viewBox="0 0 56 20" fill="none"><path d="M1 6 L9 14 L17 9 L25 16 L33 12 L41 15 L49 11 L55 13" stroke="#0F6E56" stroke-width="1.6"/></svg></div>
+              <div class="kpi"><div class="lab">CPI &middot; year over year</div><div class="val">3.2%</div><div class="dl down">&#9660; 0.1pp MoM</div><div class="ctx">Fed target 2.0%</div>
+                <svg class="spk" width="56" height="20" viewBox="0 0 56 20" fill="none"><path d="M1 2 L9 5 L17 11 L25 8 L33 13 L41 12 L49 15 L55 14" stroke="#534AB7" stroke-width="1.6"/></svg></div>
+              <div class="kpi"><div class="lab">Nonfarm payrolls</div><div class="val">+150K</div><div class="dl" style="color:var(--ink-mute)">in line w/ trend</div><div class="ctx">Avg +183K / mo</div>
+                <svg class="spk" width="56" height="20" viewBox="0 0 56 20" fill="none"><path d="M1 14 L9 9 L17 12 L25 7 L33 10 L41 8 L49 11 L55 9" stroke="#1E6FB0" stroke-width="1.6"/></svg></div>
+              <div class="kpi"><div class="lab">Avg hourly earnings</div><div class="val">$35.04</div><div class="dl down">&#9650; 0.3% MoM</div><div class="ctx">+4.0% YoY</div>
+                <svg class="spk" width="56" height="20" viewBox="0 0 56 20" fill="none"><path d="M1 16 L9 14 L17 12 L25 11 L33 8 L41 7 L49 5 L55 3" stroke="#137A4E" stroke-width="1.6"/></svg></div>
+              <div class="kpi"><div class="lab">Labor force participation</div><div class="val">62.5%</div><div class="dl" style="color:var(--ink-mute)">flat MoM</div><div class="ctx">Pre-pandemic 63.3%</div>
+                <svg class="spk" width="56" height="20" viewBox="0 0 56 20" fill="none"><path d="M1 4 L9 12 L17 10 L25 11 L33 9 L41 10 L49 9 L55 8" stroke="#C2710C" stroke-width="1.6"/></svg></div>
+              <div class="kpi"><div class="lab">JOLTS job openings</div><div class="val">8.1M</div><div class="dl down">&#9660; 0.2M MoM</div><div class="ctx">Hist. avg 7.2M</div>
+                <svg class="spk" width="56" height="20" viewBox="0 0 56 20" fill="none"><path d="M1 3 L9 5 L17 8 L25 10 L33 9 L41 11 L49 12 L55 11" stroke="#0F6E56" stroke-width="1.6"/></svg></div>
+            </div>
+
+            <div class="dash-low">
+              <div class="panel">
+                <div class="ph"><div class="t">Unemployment rate &middot; 5-year</div><div class="cta">Open in Explorer &rarr;</div></div>
+                <svg viewBox="0 0 460 160" width="100%" role="img" aria-label="Unemployment rate over five years with a pandemic spike and historical average line">
+                  <rect x="82" y="15" width="64" height="130" fill="#EFEDE6"/>
+                  <text x="90" y="28" font-size="8" fill="#A39B86" font-family="IBM Plex Mono">2020 recession</text>
+                  <line x1="30" y1="145" x2="440" y2="145" stroke="#E3E2DB"/>
+                  <line x1="30" y1="95.6" x2="440" y2="95.6" stroke="#9E948B" stroke-width="1" stroke-dasharray="5 4"/>
+                  <text x="434" y="92" font-size="8.5" fill="#7A736B" text-anchor="end" font-family="IBM Plex Mono">hist. avg 5.7%</text>
+                  <path d="M30,113.8 L64,114.7 L98,17.6 L132,48.8 L166,72.2 L200,86.9 L234,98.2 L268,108.6 L302,112.9 L336,114.7 L370,112.1 L404,111.2 L438,109.5 L438,145 L30,145 Z" fill="#0F6E56" fill-opacity=".08"/>
+                  <path d="M30,113.8 L64,114.7 L98,17.6 L132,48.8 L166,72.2 L200,86.9 L234,98.2 L268,108.6 L302,112.9 L336,114.7 L370,112.1 L404,111.2 L438,109.5" fill="none" stroke="#0F6E56" stroke-width="2"/>
+                  <circle cx="438" cy="109.5" r="3" fill="#0F6E56"/>
+                  <text x="438" y="158" font-size="8" fill="#9AA29D" text-anchor="end" font-family="IBM Plex Mono">now 4.1%</text>
+                  <text x="30" y="158" font-size="8" fill="#9AA29D" font-family="IBM Plex Mono">2020</text>
+                </svg>
+              </div>
+              <div class="panel">
+                <div class="ph"><div class="t">CPI vs. wage growth &middot; YoY</div><div class="cta">Open in Explorer &rarr;</div></div>
+                <svg viewBox="0 0 460 160" width="100%" role="img" aria-label="Consumer price index year over year compared with wage growth, shared axis">
+                  <line x1="30" y1="145" x2="440" y2="145" stroke="#E3E2DB"/>
+                  <path d="M30,126.8 L81,121.6 L132,74.8 L183,26.7 L234,60.5 L285,81.3 L336,96.9 L387,100.8 L438,103.4" fill="none" stroke="#534AB7" stroke-width="2"/>
+                  <path d="M30,104.7 L81,100.8 L132,80 L183,72.2 L234,78.7 L285,85.2 L336,89.1 L387,91.7 L438,93" fill="none" stroke="#C2710C" stroke-width="2" stroke-dasharray="6 4"/>
+                  <circle cx="438" cy="103.4" r="3" fill="#534AB7"/><circle cx="438" cy="93" r="3" fill="#C2710C"/>
+                  <text x="30" y="158" font-size="8" fill="#9AA29D" font-family="IBM Plex Mono">2020</text>
+                </svg>
+                <div class="legend" style="color:#534AB7"><span><i style="background:#534AB7"></i>CPI</span><span style="color:#C2710C"><i class="dash"></i>Avg hourly earnings</span></div>
+              </div>
+            </div>
+
+            <div class="dash-low" style="margin-top:12px;">
+              <div class="panel">
+                <div class="ph"><div class="t">Unemployment by race</div><div class="cta">+ Add to chart</div></div>
+                <div class="dbar"><span class="nm">Overall</span><div class="track"><div class="fill" style="width:58.6%;background:#0F6E56"></div></div><span class="pct">4.1%</span></div>
+                <div class="dbar"><span class="nm">White</span><div class="track"><div class="fill" style="width:51.4%;background:#5DCAA5"></div></div><span class="pct">3.6%</span></div>
+                <div class="dbar"><span class="nm">Black</span><div class="track"><div class="fill" style="width:87.1%;background:#534AB7"></div></div><span class="pct">6.1%</span></div>
+                <div class="dbar"><span class="nm">Hispanic</span><div class="track"><div class="fill" style="width:70%;background:#C2710C"></div></div><span class="pct">4.9%</span></div>
+                <div class="dbar"><span class="nm">Asian</span><div class="track"><div class="fill" style="width:47.1%;background:#1E6FB0"></div></div><span class="pct">3.3%</span></div>
+              </div>
+              <div class="panel">
+                <div class="ph"><div class="t">Upcoming releases</div><div class="cta">View calendar &rarr;</div></div>
+                <div class="rel"><div class="d"><div class="mo">Mar</div><div class="dy">14</div></div><div class="info"><div class="nm">Employment Situation</div><div class="tm">8:30 AM ET &middot; jobs report</div></div><span class="badge">in 2 days</span></div>
+                <div class="rel"><div class="d"><div class="mo">Mar</div><div class="dy">12</div></div><div class="info"><div class="nm">Consumer Price Index</div><div class="tm">8:30 AM ET</div></div><span class="badge">in 6 days</span></div>
+                <div class="rel"><div class="d"><div class="mo">Mar</div><div class="dy">13</div></div><div class="info"><div class="nm">Producer Price Index</div><div class="tm">8:30 AM ET</div></div><span class="badge">in 7 days</span></div>
+                <div class="rel"><div class="d"><div class="mo">Apr</div><div class="dy">01</div></div><div class="info"><div class="nm">JOLTS</div><div class="tm">10:00 AM ET</div></div><span class="badge">in 12 days</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mk-cap"><b>Fixes</b> homepage burial and missing context <span class="fixes">H5 &middot; H2 &middot; H4</span></div>
+    </div>
+
+    <!-- ===== MOCK 2: EXPLORER ===== -->
+    <h3 style="margin-top:54px;"><span class="sn">5.2</span>Data explorer &middot; multi-series chart builder</h3>
+    <p style="max-width:900px;">The explorer is the core response to the cluster of failures that make the current site unusable for analysis. Two modes share one URL: Quick mode pre-configures common single-indicator views for Jordan&rsquo;s release day; Builder mode (shown) exposes the full composition surface for Rashida. Indicator names resolve to series IDs invisibly, and the URL serializes the entire chart state, so the chart below is a shareable permalink.</p>
+
+    <div class="mockwrap">
+      <div class="browser">
+        <div class="b-bar"><i class="r"></i><i class="y"></i><i class="g"></i>
+          <span class="b-url"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7CA99A" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>bls.gov/explore<span class="q">?series=UNRATE,JTSJOL&amp;range=5y&amp;dual=1&amp;overlay=recession,revisions</span></span>
+        </div>
+        <div class="app">
+          <div class="app-nav">
+            <span class="logo"><span class="seal">BLS</span>U.S. Bureau of Labor Statistics</span>
+            <a class="on">Explore</a><a>Indicators</a><a>Geography</a><a>Releases</a><a>Download</a>
+            <span class="grow"></span>
+            <span class="search"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#BFE0D4" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Search any indicator&hellip;</span>
+          </div>
+          <div class="exp">
+            <div class="exp-side">
+              <div class="sect">
+                <div class="lbl">Active series &middot; 2 of 4</div>
+                <div class="pill"><span class="sw" style="background:#0F6E56"></span>Unemployment rate<span class="x">&times;</span></div>
+                <div class="pill"><span class="sw" style="background:#534AB7"></span>Job openings (JOLTS)<span class="x">&times;</span></div>
+                <div class="pill add">+ Add series</div>
+              </div>
+              <div class="sect">
+                <div class="lbl">Indicator search</div>
+                <div class="srch"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA29D" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>CPI, wages, payrolls&hellip;</div>
+              </div>
+              <div class="sect">
+                <div class="lbl">Geography &amp; demographics</div>
+                <div class="selrow"><span class="v">United States</span><span class="ch">&#9662;</span></div>
+                <div class="selrow"><span class="v">All demographics</span><span class="ch">&#9662;</span></div>
+              </div>
+              <div class="sect">
+                <div class="lbl">Chart options</div>
+                <div class="tog"><span>Recession shading (NBER)</span><span class="switch on"></span></div>
+                <div class="tog"><span>Historical average line</span><span class="switch off"></span></div>
+                <div class="tog"><span>Fed target band</span><span class="switch off"></span></div>
+                <div class="tog"><span>Normalize to index</span><span class="switch off"></span></div>
+                <div class="tog"><span>Dual Y-axis</span><span class="switch on"></span></div>
+                <div class="tog"><span>Revision markers</span><span class="switch on"></span></div>
+              </div>
+            </div>
+            <div class="exp-main">
+              <div class="exp-mh">
+                <span class="exp-title">Unemployment vs. job openings</span>
+                <span class="modes"><b>Quick</b><b class="on">Builder</b></span>
+              </div>
+              <div class="chartcard">
+                <svg viewBox="0 0 760 290" width="100%" role="img" aria-label="Dual-axis chart comparing unemployment rate and JOLTS job openings over five years, with 2020 recession shading and a revision marker">
+                  <!-- gridlines -->
+                  <line x1="70" y1="250" x2="720" y2="250" stroke="#E3E2DB"/>
+                  <line x1="70" y1="180" x2="720" y2="180" stroke="#F0EFE9"/>
+                  <line x1="70" y1="110" x2="720" y2="110" stroke="#F0EFE9"/>
+                  <line x1="70" y1="40" x2="720" y2="40" stroke="#F0EFE9"/>
+                  <!-- recession band -->
+                  <rect x="124" y="30" width="76" height="220" fill="#EFEDE6"/>
+                  <text x="128" y="44" font-size="9" fill="#A39B86" font-family="IBM Plex Mono">2020 recession</text>
+                  <!-- left axis labels (%) -->
+                  <text x="60" y="253" font-size="9" fill="#0F6E56" text-anchor="end" font-family="IBM Plex Mono">0</text>
+                  <text x="60" y="183" font-size="9" fill="#0F6E56" text-anchor="end" font-family="IBM Plex Mono">5</text>
+                  <text x="60" y="113" font-size="9" fill="#0F6E56" text-anchor="end" font-family="IBM Plex Mono">10</text>
+                  <text x="60" y="43" font-size="9" fill="#0F6E56" text-anchor="end" font-family="IBM Plex Mono">15%</text>
+                  <!-- right axis labels (millions) -->
+                  <text x="730" y="253" font-size="9" fill="#534AB7" font-family="IBM Plex Mono">0</text>
+                  <text x="730" y="183" font-size="9" fill="#534AB7" font-family="IBM Plex Mono">5</text>
+                  <text x="730" y="113" font-size="9" fill="#534AB7" font-family="IBM Plex Mono">9</text>
+                  <text x="730" y="43" font-size="9" fill="#534AB7" font-family="IBM Plex Mono">12M</text>
+                  <!-- unemployment (left, green) -->
+                  <path d="M70,199.6 L124,201 L178,44.2 L233,94.6 L287,132.4 L341,156.2 L395,174.4 L449,191.2 L504,198.2 L558,201 L612,196.8 L666,195.4 L720,192.6" fill="none" stroke="#0F6E56" stroke-width="2.4"/>
+                  <circle cx="720" cy="192.6" r="3.5" fill="#0F6E56"/>
+                  <!-- job openings (right, purple, dashed for accessibility) -->
+                  <path d="M70,129.25 L124,162.5 L178,145 L233,101.25 L287,50.5 L341,57.5 L395,68 L449,82 L504,94.25 L558,103 L612,106.5 L666,110 L720,108.25" fill="none" stroke="#534AB7" stroke-width="2.4" stroke-dasharray="7 4"/>
+                  <circle cx="720" cy="108.25" r="3.5" fill="#534AB7"/>
+                  <!-- revision marker -->
+                  <line x1="666" y1="30" x2="666" y2="250" stroke="#C2710C" stroke-width="1" stroke-dasharray="2 3"/>
+                  <path d="M666,30 l5,7 l-5,7 l-5,-7 Z" fill="#C2710C"/>
+                  <!-- x labels -->
+                  <g font-size="9" fill="#9AA29D" font-family="IBM Plex Mono" text-anchor="middle">
+                    <text x="97" y="266">2020</text><text x="205" y="266">2021</text><text x="314" y="266">2022</text><text x="422" y="266">2023</text><text x="531" y="266">2024</text><text x="693" y="266">2025</text>
+                  </g>
+                </svg>
+                <div class="legend"><span style="color:#0F6E56"><i style="background:#0F6E56"></i>Unemployment rate (left, %)</span><span style="color:#534AB7"><i class="dash" style="color:#534AB7"></i>Job openings (right, millions)</span><span style="color:#C2710C"><i style="background:#C2710C;width:8px;height:8px;border-radius:2px;transform:rotate(45deg)"></i>Revision</span></div>
+              </div>
+              <div class="rev-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A5306" stroke-width="2" style="flex:none;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><div>Feb 2025 job openings revised <b>+0.2M</b> in the March release (8.1M, from 7.9M as-published). Full vintage history available in Download.</div></div>
+              <div class="permabar">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5C645F" stroke-width="2" style="flex:none"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
+                <span class="u">bls.gov/explore?series=UNRATE,JTSJOL&range=5y&dual=1&overlay=recession,revisions</span>
+                <b class="pb primary">Copy permalink</b><b class="pb ghost">Embed</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mk-cap"><b>Fixes</b> single-chart limit, opaque IDs, no permalink, hidden revisions <span class="fixes">H1 &middot; H3 &middot; H7 &middot; H8</span></div>
+    </div>
+
+    <!-- ===== MOCK 3: RELEASES ===== -->
+    <h3 style="margin-top:54px;"><span class="sn">5.3</span>Data release calendar &amp; alerts</h3>
+    <p style="max-width:900px;">The Releases section is the surface most distinctive to the BLS redesign; it has no equivalent in the USASpending.gov or PACER redesigns. It elevates release management from a static PDF buried deep in the site to a primary nav section with a calendar view, subscribe alerts, and revision history. This is the feature Jordan needs most: she currently sets a phone alarm for 8:29 AM on jobs report Friday.</p>
+
+    <div class="mockwrap">
+      <div class="browser">
+        <div class="b-bar"><i class="r"></i><i class="y"></i><i class="g"></i>
+          <span class="b-url"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7CA99A" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>bls.gov/releases</span>
+        </div>
+        <div class="app">
+          <div class="app-nav">
+            <span class="logo"><span class="seal">BLS</span>U.S. Bureau of Labor Statistics</span>
+            <a>Explore</a><a>Indicators</a><a>Geography</a><a class="on">Releases</a><a>Download</a>
+            <span class="grow"></span>
+            <span class="search"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#BFE0D4" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Search any indicator&hellip;</span>
+          </div>
+          <div class="relpage">
+            <div class="tabs"><b class="on">Calendar</b><b>Alert subscriptions</b><b>Revision history</b></div>
+            <div class="cal-layout">
+              <div class="cal">
+                <div class="cal-h"><div class="mo">March 2025</div><div class="nav"><b>&#8249;</b><b>&#8250;</b></div></div>
+                <div class="cal-wd"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span></div>
+                <div class="cal-grid">
+                  <div class="cal-cell"><div class="dn">3</div></div>
+                  <div class="cal-cell"><div class="dn">4</div></div>
+                  <div class="cal-cell"><div class="dn">5</div></div>
+                  <div class="cal-cell"><div class="dn">6</div><div class="chip min">Productivity 8:30</div></div>
+                  <div class="cal-cell"><div class="dn">7</div></div>
+
+                  <div class="cal-cell"><div class="dn">10</div></div>
+                  <div class="cal-cell"><div class="dn">11</div></div>
+                  <div class="cal-cell"><div class="dn">12</div><div class="chip major">CPI 8:30<svg class="bell" width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a6 6 0 0 0-6 6c0 5-3 6-3 7h18c0-1-3-2-3-7a6 6 0 0 0-6-6Zm0 20a3 3 0 0 0 3-3H9a3 3 0 0 0 3 3Z"/></svg></div></div>
+                  <div class="cal-cell"><div class="dn">13</div><div class="chip mid">PPI 8:30</div></div>
+                  <div class="cal-cell"><div class="dn">14</div><div class="chip major">Jobs report 8:30<svg class="bell" width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M12 2a6 6 0 0 0-6 6c0 5-3 6-3 7h18c0-1-3-2-3-7a6 6 0 0 0-6-6Zm0 20a3 3 0 0 0 3-3H9a3 3 0 0 0 3 3Z"/></svg></div></div>
+
+                  <div class="cal-cell"><div class="dn">17</div></div>
+                  <div class="cal-cell"><div class="dn">18</div><div class="chip mid">Import prices 8:30</div></div>
+                  <div class="cal-cell"><div class="dn">19</div></div>
+                  <div class="cal-cell"><div class="dn">20</div><div class="chip min">State emp. 10:00</div></div>
+                  <div class="cal-cell"><div class="dn">21</div></div>
+
+                  <div class="cal-cell"><div class="dn">24</div></div>
+                  <div class="cal-cell"><div class="dn">25</div></div>
+                  <div class="cal-cell"><div class="dn">26</div></div>
+                  <div class="cal-cell"><div class="dn">27</div><div class="chip mid">Real earnings 8:30</div></div>
+                  <div class="cal-cell"><div class="dn">28</div></div>
+
+                  <div class="cal-cell muted"><div class="dn">31</div></div>
+                  <div class="cal-cell muted"><div class="dn">1</div><div class="chip mid">JOLTS 10:00</div></div>
+                  <div class="cal-cell muted"><div class="dn">2</div></div>
+                  <div class="cal-cell muted"><div class="dn">3</div></div>
+                  <div class="cal-cell muted"><div class="dn">4</div><div class="chip major">Jobs report 8:30</div></div>
+                </div>
+              </div>
+              <div>
+                <div class="alertcard">
+                  <h5>Employment Situation</h5>
+                  <div class="meta">Next release Fri Mar 14, 8:30 AM ET &middot; <b style="color:var(--deep-2)">in 2 days</b></div>
+                  <div class="altrow"><span class="switch on"></span><div class="txt">New data released<small>Push the moment figures post</small></div></div>
+                  <div class="altrow"><span class="switch on"></span><div class="txt">Significant revision<small>Prior month moves &gt; 0.1pp</small></div></div>
+                  <div class="altrow"><span class="switch off"></span><div class="txt">Deviates from consensus<small>Surprise vs. forecast</small></div></div>
+                  <div class="chan"><b class="email">Email on</b><b class="sms">+ Add SMS</b></div>
+                </div>
+                <div class="alertcard" style="margin-top:12px;">
+                  <h5 style="font-size:14px;">Add to calendar</h5>
+                  <div class="meta" style="margin-bottom:0;">Export the full BLS schedule to Google, Outlook, or iCal, filtered to the indicators you follow.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mk-cap"><b>Fixes</b> the PDF-only release calendar and invisible revisions <span class="fixes">H4 &middot; H8</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. DECISIONS -->
+<section id="decisions">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Key design decisions</h2></div>
+    <div class="dgrid" style="margin-top:24px;">
+      <div class="decision"><div class="q">Plain-language search replaces series IDs</div><p>Keeping series IDs and adding a better lookup tool was rejected: it preserves the two-application problem, with users carrying a cryptic code between a lookup context and a charting context. The fix is to make the plain-language name the surface for every interaction and resolve the series ID as an implementation detail. The ID still exists (in the API reference and the permalink) but is never required as input.</p></div>
+      <div class="decision"><div class="q">Recession shading is a toggle, not a default</div><p>Shading on a 1 or 2-year chart is either misleading (no recessions in the window) or alarming (the 2020 spike dominates). So it is off by default for short ranges, easily enabled for long-range analysis. The same applies to the Fed target band and the historical average line: contextual aids that help experts but can confuse novices if always present. The toggle pattern respects both archetypes.</p></div>
+      <div class="decision"><div class="q">Demographics is a filter layer, not a section</div><p>A dedicated &ldquo;Demographics&rdquo; nav section was rejected for two reasons. Breakdowns are most useful in context (Black unemployment beside the national rate, not on a separate page), and a separate section implies the data is a niche interest rather than a core analytical lens. A filter chip on every Indicator page and Chart Canvas signals that disaggregated data is first-class for every indicator.</p></div>
+      <div class="decision"><div class="q">Releases is a top-level nav section</div><p>The same reasoning that elevated Track to top-level nav in the PACER redesign applies here. Release management is not a peripheral preference; it is the primary recurring workflow for Jordan, Rashida, and every professional who monitors BLS data. The 8:30 AM Eastern release on the first Friday of each month is one of the most watched moments in global financial markets.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. OUTCOMES -->
+<section id="outcomes">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Outcomes &amp; reflection</h2></div>
+    <div class="out-grid" style="margin-top:24px;">
+      <div>
+        <h4 style="margin-top:0;">What this project demonstrates</h4>
+        <ul class="tick">
+          <li><b>Time-series data visualization:</b> multi-series composition, dual Y-axis, normalisation to index, contextual overlays, and revision markers.</li>
+          <li><b>Data democratisation through search design:</b> replacing series IDs with a plain-language interface for all 6 archetypes.</li>
+          <li><b>Release management UX:</b> calendar view, subscribe alerts, and revision history as a first-class surface unique to real-time publishing.</li>
+          <li><b>Demographic data design:</b> breakdowns by race, gender, age, and education as a persistent filter layer rather than a separate section.</li>
+          <li><b>Economic snapshot dashboard:</b> KPI cards with benchmark context instead of a press release feed.</li>
+          <li><b>Permalink and share architecture:</b> serializing complex chart state in a URL, enabling sharing and embedding without an account.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="margin-top:0;">What I would do next</h4>
+        <ul class="tick next">
+          <li>Run 6 to 8 moderated usability sessions with release-day journalists, economists, and state analysts, testing the Quick versus Builder split and the search autocomplete.</li>
+          <li>Test the overlay toggle system: does recession shading feel discoverable, or do users conclude context is absent?</li>
+          <li>Build the release alert prototype and test it against Jordan&rsquo;s workflow under deadline pressure.</li>
+          <li>Design the geographic explorer (state and metro choropleth with drill-down) as the fourth high-fidelity surface.</li>
+          <li>Explore a public chart gallery where users publish saved Explorer views for others to discover.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout note" style="margin-top:36px;">
+      <div class="ct">Constraints and honest limitations</div>
+      <p>This is a portfolio redesign, not a commissioned project. Personas are synthesised from secondary research rather than primary interviews with BLS users. A real engagement would require coordination with BLS&rsquo;s Office of Field Operations, accessibility reviews against Section 508 requirements, and alignment with Treasury and OMB on the BLS public API.</p>
+      <p>The figures in the mockups are representative of real BLS public releases, but the prototypes are not connected to the live BLS API. Several decisions, particularly around the release alert system, would require legal review given BLS&rsquo;s strict embargo policy on pre-release data.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <h2>A three-part federal data portfolio</h2>
+    <p style="max-width:660px;color:#B9D6CB;">Three redesigns demonstrating range across financial, legal, and economic data domains, with consistent methodological rigor: heuristic audit, persona research, information architecture, and high-fidelity design for each.</p>
+    <div class="series">
+      <a class="scard" href="#"><div class="sn">CASE 01</div><div class="st">USASpending.gov</div><div class="sd">Federal spending analysis</div></a>
+      <a class="scard" href="#"><div class="sn">CASE 02</div><div class="st">PACER.gov</div><div class="sd">Federal court records</div></a>
+      <a class="scard current" href="#overview"><div class="sn">CASE 03 &middot; CURRENT</div><div class="st">BLS.gov</div><div class="sd">Economic indicators</div></a>
+    </div>
+    <div class="foot-meta">
+      <span>BLS Data Explorer Redesign &nbsp;&middot;&nbsp; UX Case Study</span>
+      <span>Principal UX Designer &nbsp;&middot;&nbsp; Solo portfolio project</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var line = document.querySelector('.spark .line');
+    if (!line) return;
+    var len = line.getTotalLength();
+    line.style.strokeDasharray = len; line.style.strokeDashoffset = len;
+    line.style.transition = 'stroke-dashoffset 2.2s cubic-bezier(.4,0,.2,1)';
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ line.style.strokeDashoffset = '0'; }); });
+  })();
+</script>
+</body>
+</html>
