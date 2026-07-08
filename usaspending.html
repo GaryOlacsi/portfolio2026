@@ -153,15 +153,423 @@
         <div class="prose reveal" style="margin-top:26px;">
           <p></p>
           <p></p>
-        <!-- EDIT: drop your workflow / IA diagram here -->
-        <!-- EDIT: replace the span with <img src="images/USAspendingWorkflow.png" alt="..."> -->
-        <div class="shot reveal"><span><img src="images/USAspendingWorkflow.png" alt="..."> --></span></div>
-        <div class="prose reveal" style="margin-top:26px;">
-          <p></p>
-          <p></p>
         </div>
-
     </section>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>USASpending.gov : Before and After Workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3EFE6;
+    --surface:#FBF9F3;
+    --surface-2:#F6F2E9;
+    --ink:#22201B;
+    --muted:#6E675B;
+    --faint:#928A7C;
+    --line:#E0DACC;
+    --line-strong:#CFC7B4;
+    --pine:#1E5A50;
+    --pine-2:#2C7268;
+    --pine-tint:#E6EEEB;
+    --signal:#B0592F;
+    --signal-tint:#F3E5DC;
+    --gold:#A9822F;
+    --shadow:0 1px 0 rgba(34,32,27,.03), 0 12px 34px -22px rgba(34,32,27,.34);
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(30,90,80,.05), transparent 60%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Inter",system-ui,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding:40px 28px 64px;
+  }
+  .wrap{max-width:1220px;margin:0 auto}
+
+  /* Instrument header strip */
+  .panelbar{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;
+    color:var(--muted);text-transform:uppercase;margin-bottom:20px;
+  }
+  .chip{
+    border:1px solid var(--line-strong);border-radius:999px;
+    padding:4px 10px;background:var(--surface);color:var(--muted);
+  }
+  .chip.on{color:var(--pine);border-color:var(--pine);background:var(--pine-tint)}
+  .panelbar .sep{color:var(--faint)}
+
+  header.masthead{margin-bottom:26px}
+  .eyebrow{
+    font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--pine);font-weight:600;margin:0 0 10px;
+  }
+  h1{
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
+    font-size:clamp(30px,4.6vw,50px);line-height:1.02;letter-spacing:-.015em;
+    margin:0 0 12px;max-width:20ch;
+  }
+  .lede{font-size:17px;color:var(--muted);max-width:66ch;margin:0}
+
+  /* Scenario card */
+  .scenario{
+    margin:26px 0 30px;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow);
+    display:grid;grid-template-columns:repeat(3,1fr);gap:0;overflow:hidden;
+  }
+  .scenario > div{padding:18px 20px;border-right:1px solid var(--line)}
+  .scenario > div:last-child{border-right:0}
+  .scenario .k{
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--faint);margin:0 0 7px;
+  }
+  .scenario .v{font-size:14.5px;color:var(--ink);margin:0;font-weight:500}
+
+  /* Metrics strip */
+  .metrics{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:0 0 36px;
+  }
+  .metric{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 16px 15px;box-shadow:var(--shadow);
+  }
+  .metric .label{
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 12px;min-height:2.4em;
+  }
+  .metric .row{display:flex;align-items:baseline;gap:9px;font-family:"JetBrains Mono",monospace}
+  .metric .from{font-size:20px;color:var(--signal);font-weight:600;text-decoration:line-through;text-decoration-thickness:1.5px;text-decoration-color:rgba(176,89,47,.4)}
+  .metric .arrow{color:var(--faint);font-size:14px}
+  .metric .to{font-size:24px;color:var(--pine);font-weight:700}
+
+  /* Flow board */
+  .board-head{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 16px;flex-wrap:wrap;gap:8px}
+  .board-head h2{
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:600;
+    font-size:22px;letter-spacing:-.01em;margin:0;
+  }
+  .board-head .note{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--faint);letter-spacing:.05em}
+
+  .board{
+    display:grid;grid-template-columns:1fr 60px 1fr;gap:0;align-items:stretch;
+  }
+  .lane{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px 20px 22px;
+  }
+  .lane.before{border-top:3px solid var(--signal)}
+  .lane.after{border-top:3px solid var(--pine)}
+  .lane-title{
+    display:flex;align-items:center;gap:10px;margin:0 0 4px;
+  }
+  .lane-title .tag{
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.12em;
+    text-transform:uppercase;padding:3px 9px;border-radius:999px;font-weight:600;
+  }
+  .before .tag{background:var(--signal-tint);color:var(--signal)}
+  .after .tag{background:var(--pine-tint);color:var(--pine)}
+  .lane-title h3{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:17px;margin:0}
+  .lane-sub{font-size:13px;color:var(--muted);margin:0 0 18px}
+
+  /* Vertical stepper */
+  .steps{list-style:none;margin:0;padding:0;position:relative}
+  .steps::before{
+    content:"";position:absolute;left:15px;top:14px;bottom:14px;width:2px;
+    background:var(--line-strong);border-radius:2px;
+  }
+  .step{position:relative;padding:0 0 16px 46px;min-height:34px}
+  .step:last-child{padding-bottom:0}
+  .node{
+    position:absolute;left:4px;top:0;width:24px;height:24px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;
+    background:var(--surface);border:2px solid var(--line-strong);color:var(--muted);z-index:1;
+  }
+  .before .node{border-color:var(--signal);color:var(--signal)}
+  .after .node{border-color:var(--pine);color:var(--pine);background:var(--pine-tint)}
+  .step h4{font-size:14.5px;font-weight:600;margin:2px 0 4px;letter-spacing:-.005em;line-height:1.3}
+  .step p{font-size:13px;color:var(--muted);margin:0 0 8px;line-height:1.45}
+  .flags{display:flex;flex-wrap:wrap;gap:6px}
+  .flag{
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.05em;
+    padding:2px 8px;border-radius:6px;text-transform:uppercase;font-weight:500;
+  }
+  .flag.friction{background:var(--signal-tint);color:var(--signal)}
+  .flag.win{background:var(--pine-tint);color:var(--pine)}
+  .flag.loop{background:#EFE6D2;color:var(--gold)}
+  .flag.dead{background:transparent;color:var(--faint);border:1px dashed var(--line-strong)}
+
+  .deadend{
+    margin:10px 0 0 46px;font-family:"JetBrains Mono",monospace;font-size:10.5px;
+    color:var(--faint);letter-spacing:.04em;border-left:2px dashed var(--line-strong);
+    padding:2px 0 2px 12px;
+  }
+
+  /* Center transform column */
+  .becomes{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+  .becomes .glyph{
+    font-family:"Bricolage Grotesque",sans-serif;font-size:30px;color:var(--pine);line-height:1;
+  }
+  .becomes .word{
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--faint);writing-mode:vertical-rl;transform:rotate(180deg);
+  }
+
+  /* Legend + footer */
+  .legend{
+    margin:30px 0 0;display:flex;flex-wrap:wrap;gap:18px 26px;align-items:center;
+    padding:16px 20px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);
+  }
+  .legend .item{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--muted)}
+  .legend .dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto}
+  .legend .dot.pine{background:var(--pine)}
+  .legend .dot.signal{background:var(--signal)}
+  .legend .dot.gold{background:var(--gold)}
+  .legend .dot.hollow{background:transparent;border:1.5px dashed var(--line-strong)}
+  .legend .lbl{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);font-weight:600}
+
+  footer{
+    margin-top:26px;padding-top:18px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--faint);letter-spacing:.04em;
+  }
+  footer .brand{color:var(--pine);font-weight:600}
+
+  /* Motion */
+  .lane,.metric,.scenario{opacity:0;transform:translateY(10px);animation:rise .5s ease forwards}
+  .metric:nth-child(2){animation-delay:.04s}
+  .metric:nth-child(3){animation-delay:.08s}
+  .metric:nth-child(4){animation-delay:.12s}
+  .metric:nth-child(5){animation-delay:.16s}
+  .lane.after{animation-delay:.1s}
+  @keyframes rise{to{opacity:1;transform:none}}
+  a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--pine);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){
+    .lane,.metric,.scenario{animation:none;opacity:1;transform:none}
+  }
+
+  /* Responsive */
+  @media (max-width:880px){
+    body{padding:28px 16px 48px}
+    .scenario{grid-template-columns:1fr}
+    .scenario > div{border-right:0;border-bottom:1px solid var(--line)}
+    .scenario > div:last-child{border-bottom:0}
+    .metrics{grid-template-columns:1fr 1fr}
+    .board{grid-template-columns:1fr}
+    .becomes{flex-direction:row;padding:10px 0}
+    .becomes .word{writing-mode:horizontal-tb;transform:none}
+    .becomes .glyph{transform:rotate(90deg)}
+  }
+
+  /* Print to landscape PDF */
+  @page{size:landscape;margin:12mm}
+  @media print{
+    body{padding:0;background:var(--paper)}
+    .lane,.metric,.scenario{box-shadow:none;animation:none;opacity:1;transform:none}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="panelbar">
+    <span class="chip on">Task 01</span>
+    <span class="sep">/</span>
+    <span class="chip">Recipient spending lookup</span>
+    <span class="sep">/</span>
+    <span class="chip">Fiscal year scope</span>
+    <span class="sep">/</span>
+    <span class="chip">Advanced search : results</span>
+  </div>
+
+  <header class="masthead">
+    <p class="eyebrow">USASpending.gov / Information Architecture Redesign</p>
+    <h1>Before and after: the recipient spending lookup</h1>
+    <p class="lede">One representative task, two workflows. We follow a policy analyst who needs a single number: the total federal contract dollars awarded to one recipient in a fiscal year. The current path buries that answer behind search jargon; the redesign puts it first.</p>
+  </header>
+
+  <section class="scenario" aria-label="Scenario">
+    <div>
+      <p class="k">The task</p>
+      <p class="v">Find total federal contract dollars awarded to one recipient for a given fiscal year.</p>
+    </div>
+    <div>
+      <p class="k">The user</p>
+      <p class="v">Policy analyst with moderate data literacy and no procurement background.</p>
+    </div>
+    <div>
+      <p class="k">Success looks like</p>
+      <p class="v">A trustworthy total on screen, with the option to break it down or export it.</p>
+    </div>
+  </section>
+
+  <section class="metrics" aria-label="Projected outcomes">
+    <div class="metric">
+      <p class="label">Steps to answer</p>
+      <div class="row"><span class="from">10</span><span class="arrow">&rarr;</span><span class="to">4</span></div>
+    </div>
+    <div class="metric">
+      <p class="label">Distinct decisions</p>
+      <div class="row"><span class="from">4</span><span class="arrow">&rarr;</span><span class="to">1</span></div>
+    </div>
+    <div class="metric">
+      <p class="label">Dead ends and backtracks</p>
+      <div class="row"><span class="from">3</span><span class="arrow">&rarr;</span><span class="to">0</span></div>
+    </div>
+    <div class="metric">
+      <p class="label">Procurement terms surfaced</p>
+      <div class="row"><span class="from">5+</span><span class="arrow">&rarr;</span><span class="to">0</span></div>
+    </div>
+    <div class="metric">
+      <p class="label">Time to first number</p>
+      <div class="row"><span class="from">min</span><span class="arrow">&rarr;</span><span class="to">&lt;60s</span></div>
+    </div>
+  </section>
+
+  <div class="board-head">
+    <h2>The workflow, side by side</h2>
+    <span class="note">Left: current state. Right: redesigned flow.</span>
+  </div>
+
+  <div class="board">
+
+    <!-- BEFORE -->
+    <section class="lane before" aria-label="Before, current workflow">
+      <div class="lane-title">
+        <span class="tag">Before</span>
+        <h3>Current state</h3>
+      </div>
+      <p class="lane-sub">Search first, answer last. The analyst assembles filters before seeing whether any of it is right.</p>
+      <ol class="steps">
+        <li class="step">
+          <span class="node">01</span>
+          <h4>Choose an entry point</h4>
+          <p>The homepage offers four competing paths: search, explore, agency profiles, and downloads. None is obviously the right start.</p>
+          <div class="flags"><span class="flag friction">Ambiguous start</span></div>
+        </li>
+        <li class="step">
+          <span class="node">02</span>
+          <h4>Open Advanced Search</h4>
+          <p>A blank keyword field sits above a rail of fifteen plus filter groups. Nothing indicates which ones this task needs.</p>
+          <div class="flags"><span class="flag friction">Blank canvas</span></div>
+        </li>
+        <li class="step">
+          <span class="node">03</span>
+          <h4>Filter by recipient</h4>
+          <p>Autocomplete expects a near exact legal name, and UEI and legacy DUNS identifiers surface before the analyst knows what they are.</p>
+          <div class="flags"><span class="flag friction">Identifier jargon</span></div>
+        </li>
+        <li class="step">
+          <span class="node">04</span>
+          <h4>Set the time period</h4>
+          <p>Fiscal year versus calendar range, with no cue that the federal fiscal year starts in October.</p>
+          <div class="flags"><span class="flag friction">Temporal mismatch</span></div>
+        </li>
+        <li class="step">
+          <span class="node">05</span>
+          <h4>Pick an award type</h4>
+          <p>Contracts, grants, loans, direct payments, and IDVs are listed side by side with no plain-language framing.</p>
+          <div class="flags"><span class="flag friction">Domain jargon</span></div>
+        </li>
+        <li class="step">
+          <span class="node">06</span>
+          <h4>Submit and read the table</h4>
+          <p>Results arrive as tabbed, dense tables rather than an answer. The total the analyst wants is not the thing on screen.</p>
+          <div class="flags"><span class="flag friction">Buried answer</span></div>
+          <p class="deadend">Abandon path: users with low confidence leave here.</p>
+        </li>
+        <li class="step">
+          <span class="node">07</span>
+          <h4>Discover a wrong filter</h4>
+          <p>A sub agency was set instead of the recipient. Correcting it means returning to the rail and losing the table's context.</p>
+          <div class="flags"><span class="flag loop">&#8634; Loops to 02</span></div>
+        </li>
+        <li class="step">
+          <span class="node">08</span>
+          <h4>Re-apply and re-scan</h4>
+          <p>Adjust, resubmit, and hunt once more for the aggregate figure across tabs and charts.</p>
+          <div class="flags"><span class="flag loop">&#8634; Loops to 06</span></div>
+        </li>
+      </ol>
+    </section>
+
+    <div class="becomes" aria-hidden="true">
+      <span class="glyph">&rarr;</span>
+      <span class="word">Redesigned</span>
+    </div>
+
+    <!-- AFTER -->
+    <section class="lane after" aria-label="After, redesigned workflow">
+      <div class="lane-title">
+        <span class="tag">After</span>
+        <h3>Redesigned flow</h3>
+      </div>
+      <p class="lane-sub">Answer first, refine second. Plain-language intent and smart defaults surface the number on arrival.</p>
+      <ol class="steps">
+        <li class="step">
+          <span class="node">01</span>
+          <h4>State the goal in plain language</h4>
+          <p>The homepage leads with one prompt and three intents: money to a recipient, spending by an agency, awards in a place.</p>
+          <div class="flags"><span class="flag win">Guided entry</span></div>
+        </li>
+        <li class="step">
+          <span class="node">02</span>
+          <h4>Name the recipient</h4>
+          <p>Forgiving search with disambiguation cards. Location and parent company settle the match; identifiers stay behind plain labels.</p>
+          <div class="flags"><span class="flag win">Forgiving match</span></div>
+        </li>
+        <li class="step">
+          <span class="node">03</span>
+          <h4>See the answer immediately</h4>
+          <p>Smart defaults (latest complete fiscal year, all award types, national scope) surface a headline total the moment the recipient resolves.</p>
+          <div class="flags"><span class="flag win">Answer first</span><span class="flag win">Smart defaults</span></div>
+        </li>
+        <li class="step">
+          <span class="node">04</span>
+          <h4>Refine in place</h4>
+          <p>Change the year, narrow to contracts only, or add a location, all without leaving the summary or rebuilding the query.</p>
+          <div class="flags"><span class="flag win">Progressive refine</span></div>
+        </li>
+        <li class="step">
+          <span class="node">05</span>
+          <h4>Trust, break down, export</h4>
+          <p>Total, award count, and top awards sit in one card, with share and download within reach and the fiscal scope stated in words.</p>
+          <div class="flags"><span class="flag win">Clear outcome</span></div>
+        </li>
+      </ol>
+    </section>
+
+  </div>
+
+  <div class="legend" aria-label="Legend">
+    <span class="lbl">Legend</span>
+    <span class="item"><span class="dot pine"></span>Streamlined step</span>
+    <span class="item"><span class="dot signal"></span>Friction point</span>
+    <span class="item"><span class="dot gold"></span>Backtrack loop</span>
+    <span class="item"><span class="dot hollow"></span>Potential abandon</span>
+  </div>
+
+  <footer>
+    <span class="brand">NavEase, LLC / UX and Information Architecture</span>
+    <span>Figures shown are projected design targets for this case study, not measured production results.</span>
+  </footer>
+
+</div>
+</body>
+</html>
 
     <!-- ===== DESIGN ===== -->
     <section class="band">
