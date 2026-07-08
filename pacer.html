@@ -146,8 +146,391 @@
         <div class="prose reveal" style="margin-top:26px;">
           <p></p>
           <p></p>
-
       </div>
+      <!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PACER.gov : Before and After Workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3EFE6;
+    --surface:#FBF9F3;
+    --surface-2:#F6F2E9;
+    --ink:#22201B;
+    --muted:#6E675B;
+    --faint:#928A7C;
+    --line:#E0DACC;
+    --line-strong:#CFC7B4;
+    --pine:#1E5A50;
+    --pine-2:#2C7268;
+    --pine-tint:#E6EEEB;
+    --signal:#B0592F;
+    --signal-tint:#F3E5DC;
+    --gold:#A9822F;
+    --shadow:0 1px 0 rgba(34,32,27,.03), 0 12px 34px -22px rgba(34,32,27,.34);
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(30,90,80,.05), transparent 60%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Inter",system-ui,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding:40px 28px 64px;
+  }
+  .wrap{max-width:1240px;margin:0 auto}
+
+  /* Instrument header strip */
+  .panelbar{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;
+    color:var(--muted);text-transform:uppercase;margin-bottom:20px;
+  }
+  .chip{
+    border:1px solid var(--line-strong);border-radius:999px;
+    padding:4px 10px;background:var(--surface);color:var(--muted);
+  }
+  .chip.hot{border-color:var(--pine);color:var(--pine);background:var(--pine-tint)}
+  .panelbar .sep{flex:1 1 40px;height:1px;background:var(--line-strong);min-width:24px}
+
+  h1{
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
+    font-size:clamp(26px,3.4vw,40px);line-height:1.05;letter-spacing:-.01em;
+    margin:6px 0 8px;
+  }
+  h1 .sub{display:block;font-weight:600;font-size:clamp(14px,1.6vw,18px);color:var(--pine);letter-spacing:0;margin-top:8px}
+  .lede{max-width:70ch;color:var(--muted);font-size:15px;margin:0 0 26px}
+
+  /* Scenario card */
+  .scenario{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:0;
+    border:1px solid var(--line-strong);border-radius:var(--radius);
+    background:var(--surface);box-shadow:var(--shadow);overflow:hidden;margin-bottom:22px;
+  }
+  .scenario .cell{padding:16px 18px;border-right:1px solid var(--line)}
+  .scenario .cell:last-child{border-right:0}
+  .scenario .k{
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--faint);margin-bottom:6px;
+  }
+  .scenario .v{font-size:14px;color:var(--ink)}
+  .scenario .v b{font-weight:600}
+
+  /* Outcomes strip */
+  .outcomes{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:30px;
+  }
+  .metric{
+    border:1px solid var(--line-strong);border-radius:var(--radius);
+    background:var(--surface);padding:14px 14px 12px;box-shadow:var(--shadow);
+  }
+  .metric .lab{
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--faint);margin-bottom:9px;min-height:26px;
+  }
+  .metric .val{display:flex;align-items:baseline;gap:8px;font-family:"Bricolage Grotesque",sans-serif}
+  .metric .from{font-size:19px;font-weight:600;color:var(--signal)}
+  .metric .arw{font-size:13px;color:var(--faint)}
+  .metric .to{font-size:24px;font-weight:700;color:var(--pine)}
+  .metric .val.text .from,.metric .val.text .to{font-size:14px;line-height:1.15}
+
+  /* Lanes */
+  .lanes{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  .lane{
+    border:1px solid var(--line-strong);border-radius:16px;background:var(--surface);
+    box-shadow:var(--shadow);padding:18px 18px 20px;position:relative;
+  }
+  .lane.before{background:linear-gradient(180deg,var(--signal-tint),var(--surface) 120px)}
+  .lane.after{background:linear-gradient(180deg,var(--pine-tint),var(--surface) 120px)}
+  .lane-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .tag{
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;padding:4px 10px;border-radius:999px;font-weight:600;
+  }
+  .tag.b{background:var(--signal);color:#fff}
+  .tag.a{background:var(--pine);color:#fff}
+  .lane h2{font-family:"Bricolage Grotesque",sans-serif;font-size:19px;font-weight:700;margin:0;letter-spacing:-.01em}
+  .lane .pattern{font-size:12.5px;color:var(--muted);margin:4px 0 16px}
+
+  ol.steps{list-style:none;margin:0;padding:0;position:relative}
+  ol.steps li{
+    position:relative;padding:0 0 16px 42px;
+  }
+  ol.steps li:last-child{padding-bottom:2px}
+  /* connector line */
+  ol.steps li::before{
+    content:"";position:absolute;left:15px;top:26px;bottom:-2px;width:2px;background:var(--line-strong);
+  }
+  ol.steps li:last-child::before{display:none}
+  .node{
+    position:absolute;left:0;top:0;width:32px;height:32px;border-radius:9px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:600;
+    border:1px solid var(--line-strong);background:var(--surface-2);color:var(--ink);
+  }
+  .before .node{border-color:#D9B5A3;color:var(--signal)}
+  .after .node{border-color:#A8CabF;color:var(--pine)}
+  .step-t{font-size:14px;font-weight:600;color:var(--ink);margin:5px 0 3px}
+  .step-d{font-size:12.5px;color:var(--muted);margin:0}
+
+  .flag{
+    display:inline-flex;align-items:center;gap:6px;margin-top:7px;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.02em;
+    padding:3px 8px;border-radius:6px;
+  }
+  .flag.friction{background:var(--signal-tint);color:var(--signal);border:1px solid #E3C3B4}
+  .flag.win{background:var(--pine-tint);color:var(--pine);border:1px solid #BFD8D1}
+  .flag .d{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+
+  /* loop + abandon annotations on before lane */
+  .annot{
+    margin-top:14px;border-top:1px dashed var(--line-strong);padding-top:12px;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .annot .row{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--muted)}
+  .annot .mk{
+    font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:600;letter-spacing:.06em;
+    text-transform:uppercase;padding:3px 7px;border-radius:5px;flex:none;margin-top:1px;
+  }
+  .annot .mk.loop{background:var(--signal-tint);color:var(--signal);border:1px solid #E3C3B4}
+  .annot .mk.stop{background:#3A2A22;color:#F3EFE6}
+  .annot .mk.good{background:var(--pine-tint);color:var(--pine);border:1px solid #BFD8D1}
+
+  /* legend */
+  .legend{
+    margin-top:26px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--muted);
+    border-top:1px solid var(--line-strong);padding-top:16px;
+  }
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend i{width:11px;height:11px;border-radius:3px;flex:none}
+  .legend i.s{background:var(--signal)}
+  .legend i.p{background:var(--pine)}
+  .legend i.n{background:var(--surface-2);border:1px solid var(--line-strong)}
+
+  .foot{
+    margin-top:14px;font-size:11.5px;color:var(--faint);max-width:88ch;
+  }
+  .foot b{color:var(--muted);font-weight:600}
+
+  @media (max-width:860px){
+    .scenario{grid-template-columns:1fr}
+    .scenario .cell{border-right:0;border-bottom:1px solid var(--line)}
+    .scenario .cell:last-child{border-bottom:0}
+    .outcomes{grid-template-columns:1fr 1fr}
+    .lanes{grid-template-columns:1fr}
+  }
+
+  @media print{
+    @page{size:landscape;margin:12mm}
+    body{padding:0;background:var(--paper)}
+    .lane,.metric,.scenario{box-shadow:none}
+    .lanes{gap:14px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="panelbar">
+    <span class="chip hot">PACER.gov</span>
+    <span class="chip">Case study : workflow</span>
+    <span class="chip">Primary task : retrieve a filing</span>
+    <span class="sep"></span>
+    <span class="chip">Before / After</span>
+  </div>
+
+  <h1>
+    Retrieving a court filing
+    <span class="sub">From a court-fragmented, cost-blind search to a unified search with cost preview before purchase</span>
+  </h1>
+  <p class="lede">
+    The same job, run two ways. The current path forces the user to guess the court, sign in twice, and commit to a purchase before any price is shown. The redesign routes every entry point through one national search and puts a cost preview ahead of the transaction.
+  </p>
+
+  <!-- Scenario -->
+  <div class="scenario">
+    <div class="cell">
+      <div class="k">Task</div>
+      <div class="v">Find and retrieve a specific filing (a motion, order, or opinion) in a federal court case.</div>
+    </div>
+    <div class="cell">
+      <div class="k">User</div>
+      <div class="v">A paralegal or reporter who knows the parties and rough timeframe, but not the court's internal case number or which court holds the record.</div>
+    </div>
+    <div class="cell">
+      <div class="k">Success looks like</div>
+      <div class="v">The correct document in hand, with the cost known <b>before</b> the purchase is committed.</div>
+    </div>
+  </div>
+
+  <!-- Outcomes -->
+  <div class="outcomes">
+    <div class="metric">
+      <div class="lab">Steps to document</div>
+      <div class="val"><span class="from">8</span><span class="arw">to</span><span class="to">5</span></div>
+    </div>
+    <div class="metric">
+      <div class="lab">Court decisions up front</div>
+      <div class="val"><span class="from">3</span><span class="arw">to</span><span class="to">0</span></div>
+    </div>
+    <div class="metric">
+      <div class="lab">Sign-ins to navigate</div>
+      <div class="val"><span class="from">2</span><span class="arw">to</span><span class="to">1</span></div>
+    </div>
+    <div class="metric">
+      <div class="lab">Cost visibility</div>
+      <div class="val text"><span class="from">billed after</span><span class="arw">to</span><span class="to">shown before</span></div>
+    </div>
+    <div class="metric">
+      <div class="lab">Docket terms exposed</div>
+      <div class="val text"><span class="from">legacy jargon</span><span class="arw">to</span><span class="to">plain language</span></div>
+    </div>
+  </div>
+
+  <!-- Lanes -->
+  <div class="lanes">
+
+    <!-- BEFORE -->
+    <section class="lane before" aria-labelledby="before-h">
+      <div class="lane-head">
+        <span class="tag b">Before</span>
+        <h2 id="before-h">Current PACER</h2>
+      </div>
+      <p class="pattern">Pattern: search first, court by court, pay before you know the price.</p>
+
+      <ol class="steps">
+        <li>
+          <span class="node">1</span>
+          <p class="step-t">Guess the court</p>
+          <p class="step-d">Decide whether the case is district, appellate, or bankruptcy, and which district or circuit holds it.</p>
+          <span class="flag friction"><span class="d"></span>Which-court guesswork</span>
+        </li>
+        <li>
+          <span class="node">2</span>
+          <p class="step-t">Sign in twice</p>
+          <p class="step-d">Authenticate to PACER, then again to that court's CM/ECF system to reach the record.</p>
+          <span class="flag friction"><span class="d"></span>Separate logins</span>
+        </li>
+        <li>
+          <span class="node">3</span>
+          <p class="step-t">Pick a search path</p>
+          <p class="step-d">Choose between the national Case Locator and an individual court portal, which behave differently.</p>
+          <span class="flag friction"><span class="d"></span>Two systems, two behaviors</span>
+        </li>
+        <li>
+          <span class="node">4</span>
+          <p class="step-t">Enter a court-specific case number</p>
+          <p class="step-d">Match the local number format, or fall back to a party-name search with no context.</p>
+          <span class="flag friction"><span class="d"></span>Format knowledge required</span>
+        </li>
+        <li>
+          <span class="node">5</span>
+          <p class="step-t">Sift and disambiguate</p>
+          <p class="step-d">Scan results scattered across courts and case types with little to tell them apart.</p>
+          <span class="flag friction"><span class="d"></span>No disambiguating context</span>
+        </li>
+        <li>
+          <span class="node">6</span>
+          <p class="step-t">Decode the docket sheet</p>
+          <p class="step-d">Read cryptic docket entry text to locate the filing you actually need.</p>
+          <span class="flag friction"><span class="d"></span>Legacy docket jargon</span>
+        </li>
+        <li>
+          <span class="node">7</span>
+          <p class="step-t">Open a document, blind to cost</p>
+          <p class="step-d">Click through to a filing that is billed per page, with no running total shown first.</p>
+          <span class="flag friction"><span class="d"></span>No cost preview</span>
+        </li>
+        <li>
+          <span class="node">8</span>
+          <p class="step-t">Learn the price after the fact</p>
+          <p class="step-d">See the charge only once billed; hit page caps and unexpected multi-document fees.</p>
+          <span class="flag friction"><span class="d"></span>Surprise billing</span>
+        </li>
+      </ol>
+
+      <div class="annot">
+        <div class="row"><span class="mk loop">Loop</span><span>Wrong court at step 1 sends the user back to the start, often more than once.</span></div>
+        <div class="row"><span class="mk stop">Abandon</span><span>Common exit at step 7: the user stops at the cost wall rather than commit to an unknown charge.</span></div>
+      </div>
+    </section>
+
+    <!-- AFTER -->
+    <section class="lane after" aria-labelledby="after-h">
+      <div class="lane-head">
+        <span class="tag a">After</span>
+        <h2 id="after-h">Redesigned PACER</h2>
+      </div>
+      <p class="pattern">Pattern: one national search, plain language, price shown before you buy.</p>
+
+      <ol class="steps">
+        <li>
+          <span class="node">1</span>
+          <p class="step-t">Search nationally, once</p>
+          <p class="step-d">Enter parties, a case, or keywords in a single box; no court selection and one sign-in.</p>
+          <span class="flag win"><span class="d"></span>No court guesswork</span>
+        </li>
+        <li>
+          <span class="node">2</span>
+          <p class="step-t">Read unified results</p>
+          <p class="step-d">See matches from every court in one list, each tagged with court, date, and case type.</p>
+          <span class="flag win"><span class="d"></span>Context on every result</span>
+        </li>
+        <li>
+          <span class="node">3</span>
+          <p class="step-t">Open a plain-language docket</p>
+          <p class="step-d">Scan readable entry labels mapped from legacy terms, so the filing is easy to spot.</p>
+          <span class="flag win"><span class="d"></span>Readable docket entries</span>
+        </li>
+        <li>
+          <span class="node">4</span>
+          <p class="step-t">Preview the cost before buying</p>
+          <p class="step-d">Select the document and see pages, fee, and quarterly fee-waiver status ahead of purchase.</p>
+          <span class="flag win"><span class="d"></span>Cost known before commit</span>
+        </li>
+        <li>
+          <span class="node">5</span>
+          <p class="step-t">Retrieve with a running total</p>
+          <p class="step-d">Get the document; a receipt and running total stay visible so charges never surprise.</p>
+          <span class="flag win"><span class="d"></span>Transparent, no dead ends</span>
+        </li>
+      </ol>
+
+      <div class="annot">
+        <div class="row"><span class="mk good">Single path</span><span>Every entry point (party, case number, or keyword) routes to the same unified result set.</span></div>
+        <div class="row"><span class="mk good">Decision point</span><span>The cost preview is the one deliberate gate, placed before spending rather than after.</span></div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="legend">
+    <span><i class="s"></i>Before : friction point</span>
+    <span><i class="p"></i>After : resolved</span>
+    <span><i class="n"></i>Step node</span>
+    <span>Loop = backtrack &nbsp; Abandon = likely exit</span>
+  </div>
+
+  <p class="foot">
+    <b>Note on the numbers.</b> The outcome figures above are projected design targets that follow directly from the structural changes (unified search removes the court decisions; the cost preview removes the blind purchase). They are not measured results; swap in real figures from a tree test or timed task study to report validated gains.
+  </p>
+
+</div>
+</body>
+</html>
+  
     </section>
 
     <!-- ===== DESIGN ===== -->
