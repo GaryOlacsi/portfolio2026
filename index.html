@@ -238,468 +238,356 @@
           </div>
         </div>
       </div>
-   <!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BLS.gov : Before and After Workflow</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Systems Before Screens: Research to Screen Decisions | NavEase</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --paper:#F3EFE6;
-    --surface:#FBF9F3;
-    --surface-2:#F6F2E9;
-    --ink:#22201B;
-    --muted:#6E675B;
-    --faint:#928A7C;
-    --line:#E0DACC;
-    --line-strong:#CFC7B4;
-    --pine:#1E5A50;
-    --pine-2:#2C7268;
-    --pine-tint:#E6EEEB;
-    --signal:#B0592F;
-    --signal-tint:#F3E5DC;
-    --gold:#A9822F;
-    --shadow:0 1px 0 rgba(34,32,27,.03), 0 12px 34px -22px rgba(34,32,27,.34);
-    --radius:12px;
-  }
-  *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
-  body{
-    margin:0;
-    background:
-      radial-gradient(1200px 600px at 80% -10%, rgba(30,90,80,.05), transparent 60%),
-      var(--paper);
-    color:var(--ink);
-    font-family:"Inter",system-ui,sans-serif;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-    padding:40px 28px 64px;
-  }
-  .wrap{max-width:1220px;margin:0 auto}
-
-  /* Instrument header strip */
-  .panelbar{
-    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
-    font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;
-    color:var(--muted);text-transform:uppercase;margin-bottom:20px;
-  }
-  .chip{
-    border:1px solid var(--line-strong);border-radius:999px;
-    padding:4px 10px;background:var(--surface);color:var(--muted);
-  }
-  .chip.on{background:var(--pine);border-color:var(--pine);color:#F4F1E7}
-  .chip.sig{color:var(--signal);border-color:var(--signal)}
-  .panelbar .sep{flex:1}
-
-  header.mast{margin:6px 0 26px}
-  .eyebrow{
-    font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--pine-2);margin:0 0 10px;
-  }
-  h1{
-    font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
-    font-size:clamp(28px,4.4vw,46px);line-height:1.02;letter-spacing:-.01em;
-    margin:0 0 12px;color:var(--ink);max-width:20ch;
-  }
-  .dek{font-size:16px;color:var(--muted);max-width:64ch;margin:0}
-
-  /* Scenario card */
-  .scenario{
-    display:grid;grid-template-columns:1.4fr 1fr;gap:0;
-    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-    box-shadow:var(--shadow);overflow:hidden;margin:28px 0 22px;
-  }
-  .scenario > div{padding:20px 22px}
-  .scenario .task{border-right:1px solid var(--line)}
-  .scn-label{
-    font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--faint);margin:0 0 8px;
-  }
-  .scenario h2{
-    font-family:"Bricolage Grotesque",sans-serif;font-weight:600;
-    font-size:19px;margin:0 0 6px;line-height:1.2;
-  }
-  .scenario p{margin:0;font-size:14.5px;color:var(--muted)}
-  .persona-row{display:flex;gap:14px;align-items:baseline;margin-top:4px}
-  .persona-row .who{font-weight:600;color:var(--ink);font-size:14.5px}
-
-  /* Outcomes strip */
-  .outcomes{
-    display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:22px 0 30px;
-  }
-  .metric{
-    background:var(--surface);border:1px solid var(--line);border-radius:10px;
-    padding:14px 14px 12px;position:relative;
-  }
-  .metric .m-label{
-    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.06em;
-    text-transform:uppercase;color:var(--faint);margin:0 0 10px;min-height:26px;
-  }
-  .metric .m-pair{display:flex;align-items:baseline;gap:8px}
-  .metric .m-before{
-    font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--faint);
-    text-decoration:line-through;text-decoration-color:var(--signal);
-  }
-  .metric .m-arrow{color:var(--faint);font-size:13px}
-  .metric .m-after{
-    font-family:"Bricolage Grotesque",sans-serif;font-weight:700;
-    font-size:22px;color:var(--pine);line-height:1;
-  }
-  .metric .m-after.word{font-size:14px;line-height:1.2}
-
-  /* Flow board */
-  .board{
-    display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;
-  }
-  .lane{
-    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-    box-shadow:var(--shadow);overflow:hidden;
-  }
-  .lane-head{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:14px 18px;border-bottom:1px solid var(--line);
-  }
-  .lane-head .lh-l{display:flex;align-items:center;gap:10px}
-  .dot{width:9px;height:9px;border-radius:50%}
-  .lane.before .dot{background:var(--signal)}
-  .lane.after .dot{background:var(--pine)}
-  .lane-head h3{
-    font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:16px;margin:0;
-  }
-  .lane-head .tag{
-    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.06em;
-    text-transform:uppercase;padding:3px 9px;border-radius:999px;
-  }
-  .lane.before .tag{background:var(--signal-tint);color:var(--signal)}
-  .lane.after .tag{background:var(--pine-tint);color:var(--pine)}
-  .lane-body{padding:16px 18px 20px}
-
-  .step{
-    display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;
-    padding:11px 0;position:relative;
-  }
-  .step .sn{
-    font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:600;
-    width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
-    border:1px solid var(--line-strong);color:var(--muted);background:var(--surface-2);
-  }
-  .lane.after .step .sn{border-color:var(--pine);color:var(--pine);background:var(--pine-tint)}
-  .step b{font-size:14.5px;font-weight:600;display:block;line-height:1.25}
-  .step small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
-
-  /* connector line */
-  .step:not(:last-child)::before{
-    content:"";position:absolute;left:13px;top:37px;bottom:-11px;width:1px;
-    background:var(--line-strong);
-  }
-  .lane.after .step:not(:last-child)::before{background:var(--pine-tint)}
-
-  /* friction markers (before) */
-  .flag{
-    display:inline-flex;align-items:center;gap:6px;margin-top:6px;
-    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.03em;
-    color:var(--signal);background:var(--signal-tint);
-    padding:3px 8px;border-radius:6px;
-  }
-  .flag::before{content:"!";font-weight:700}
-  .flag.stall{color:var(--gold);background:#F4ECD9}
-  .flag.stall::before{content:"\21ba"}
-  .flag.dead{color:#8A2F1F;background:#F1DAD2}
-  .flag.dead::before{content:"\00d7"}
-
-  /* smart markers (after) */
-  .good{
-    display:inline-flex;align-items:center;gap:6px;margin-top:6px;
-    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.03em;
-    color:var(--pine);background:var(--pine-tint);
-    padding:3px 8px;border-radius:6px;
-  }
-  .good::before{content:"\2713";font-weight:700}
-
-  /* decision node (after) */
-  .decision{
-    display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;
-    padding:11px 0;position:relative;
-  }
-  .decision .sn{
-    font-family:"JetBrains Mono",monospace;font-weight:700;
-    width:26px;height:26px;display:flex;align-items:center;justify-content:center;
-    color:var(--gold);border:1px solid var(--gold);background:#F4ECD9;
-    transform:rotate(45deg);border-radius:5px;
-  }
-  .decision .sn span{transform:rotate(-45deg)}
-  .decision b{font-size:14.5px;font-weight:600;display:block;line-height:1.25}
-  .decision small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
-  .decision:not(:last-child)::before{
-    content:"";position:absolute;left:13px;top:37px;bottom:-11px;width:1px;
-    background:var(--pine-tint);
+  :root {
+    --paper: #F2EEE5;
+    --panel: #FBF9F4;
+    --ink: #1C2A26;
+    --ink-soft: #5C6B65;
+    --pine: #1E5A50;
+    --pine-deep: #123E37;
+    --pine-tint: #E2EBE7;
+    --signal: #C1761F;
+    --hairline: #D8D2C4;
+    --mono: 'JetBrains Mono', monospace;
+    --body: 'Inter', sans-serif;
+    --display: 'Bricolage Grotesque', sans-serif;
   }
 
-  .lane-foot{
-    border-top:1px dashed var(--line-strong);margin-top:8px;padding:13px 18px 2px;
-    font-size:13px;color:var(--muted);
-  }
-  .lane-foot .fx{
-    font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--pine);
-    background:var(--pine-tint);padding:2px 8px;border-radius:5px;margin-right:6px;
-  }
-  .lane.before .lane-foot .fx{color:var(--signal);background:var(--signal-tint)}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  /* footer note */
-  .note{
-    margin:26px 0 0;padding:14px 18px;border-radius:10px;
-    background:var(--surface-2);border:1px solid var(--line);
-    font-size:12.5px;color:var(--faint);font-family:"JetBrains Mono",monospace;
-    letter-spacing:.02em;line-height:1.7;
-  }
-  .note b{color:var(--muted);font-weight:600}
-
-  @media (max-width:880px){
-    .scenario{grid-template-columns:1fr}
-    .scenario .task{border-right:0;border-bottom:1px solid var(--line)}
-    .outcomes{grid-template-columns:repeat(2,1fr)}
-    .board{grid-template-columns:1fr}
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Landscape PDF export */
-  @media print{
-    @page{size:landscape;margin:12mm}
-    body{padding:0;background:var(--paper)}
-    .lane,.scenario,.metric{box-shadow:none}
-    .board{gap:12px}
-    .panelbar .chip{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 56px 32px 72px;
+  }
+
+  /* -- Masthead ------------------------------- */
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 14px;
+    margin-bottom: 40px;
+  }
+  .masthead .brand {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--pine-deep);
+  }
+  .masthead .doc-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+
+  /* -- Thesis block --------------------------- */
+  .thesis { margin-bottom: 48px; max-width: 760px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--signal);
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(34px, 5.4vw, 52px);
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+    margin-bottom: 18px;
+  }
+  h1 em {
+    font-style: normal;
+    color: var(--pine);
+  }
+  .thesis p {
+    font-size: 16.5px;
+    color: var(--ink);
+    max-width: 640px;
+  }
+  .thesis p strong { color: var(--pine-deep); }
+
+  /* -- Chain rail layout ----------------------- */
+  .chain-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 0 0 10px 58px;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 0;
+  }
+  .chain-head .col-out { color: var(--pine-deep); }
+
+  .channel {
+    display: grid;
+    grid-template-columns: 58px 1fr 1fr;
+    gap: 0 24px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--hairline);
+    position: relative;
+  }
+  .channel:last-of-type { border-bottom: 2px solid var(--ink); }
+
+  .ch-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--paper);
+    background: var(--pine);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+  }
+
+  .ch-in h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 19px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+  .ch-in p {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    max-width: 380px;
+  }
+
+  .ch-out {
+    background: var(--panel);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--signal);
+    border-radius: 3px;
+    padding: 12px 16px;
+  }
+  .ch-out .governs {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--signal);
+    margin-bottom: 6px;
+  }
+  .ch-out p {
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+  .ch-out p strong { color: var(--pine-deep); font-weight: 600; }
+
+  /* -- Synthesis strip ------------------------- */
+  .synthesis {
+    margin-top: 48px;
+    background: var(--pine-deep);
+    color: var(--pine-tint);
+    border-radius: 4px;
+    padding: 30px 34px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  .synthesis h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.25;
+    color: #FFFFFF;
+    margin-bottom: 10px;
+  }
+  .synthesis p {
+    font-size: 13.5px;
+    color: var(--pine-tint);
+    opacity: 0.92;
+  }
+  .gauges {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    text-align: left;
+  }
+  .gauge .value {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1;
+  }
+  .gauge .label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    color: var(--pine-tint);
+    opacity: 0.8;
+    line-height: 1.5;
+  }
+
+  .footer-note {
+    margin-top: 26px;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 760px) {
+    .chain-head { display: none; }
+    .channel { grid-template-columns: 48px 1fr; }
+    .ch-id { width: 34px; height: 34px; font-size: 10px; }
+    .ch-out { grid-column: 2; margin-top: 12px; }
+    .synthesis { grid-template-columns: 1fr; }
+    .footer-note { flex-direction: column; gap: 6px; }
+  }
+
+  @media print {
+    body { background: #FFFFFF; }
+    .sheet { padding: 24px; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="sheet">
+  <section class="thesis">
+    <div class="eyebrow">Enterprise UX Method</div>
+    <h1>Every screen decision has an <em>upstream answer</em>.</h1>
+    <p>Enterprise screen design is a series of decisions: what screens exist, what each contains, what things are called, how data is filtered, what gets emphasis. <strong>None of these are matters of taste.</strong> Each has a correct answer that lives in the domain and the users' work. These five research activities are how I retrieve those answers before a single screen is drawn.</p>
+  </section>
 
-  <div class="panelbar">
-    <span class="chip on">BLS.gov</span>
-    <span class="chip">Case study 03 of 03</span>
-    <span class="chip">Task flow : before and after</span>
-    <span class="sep"></span>
-    <span class="chip sig">Design targets, not measured results</span>
+  <div class="chain-head">
+    <span class="col-in">Research Signal (Input)</span>
+    <span class="col-out">Screen Decision (Output)</span>
   </div>
 
-  <header class="mast">
-    <p class="eyebrow">Workflow redesign / primary task</p>
-    <h1>Compare two indicators and share the result</h1>
-    <p class="dek">The current site treats each economic program as its own silo reached through series IDs, and it cannot co-plot two series or hand back a shareable chart. The redesign replaces code lookup with plain-language search and routes every entry point to one Indicator Detail page where a chart is built, revisions are surfaced, and the full state lives in a link.</p>
-  </header>
-
-  <!-- Scenario -->
-  <section class="scenario">
-    <div class="task">
-      <p class="scn-label">Scenario</p>
-      <h2>Put the unemployment rate and CPI on one chart, then send it to a colleague</h2>
-      <p>A common analytical task on BLS.gov: view two headline indicators together over the same window, note any revision in the latest release, and share the exact view. Today the two indicators live in separate programs (CPS and CPI) with no shared chart surface.</p>
+  <article class="channel">
+    <div class="ch-id">01</div>
+    <div class="ch-in">
+      <h2>Task Analysis</h2>
+      <p>Decomposes the work into goals, subtasks, decision points, and dependencies; the structure that exists before any software does.</p>
     </div>
+    <div class="ch-out">
+      <div class="governs">Governs</div>
+      <p><strong>Workflow and screen boundaries.</strong> How many screens, where they divide, what data must stay co-present, and where exception paths and save-and-resume belong.</p>
+    </div>
+  </article>
+
+  <article class="channel">
+    <div class="ch-id">02</div>
+    <div class="ch-in">
+      <h2>Mental Model Extraction</h2>
+      <p>Surfaces how users internally represent the domain: the entities they think in, the names they use, and the cause-and-effect they assume.</p>
+    </div>
+    <div class="ch-out">
+      <div class="governs">Governs</div>
+      <p><strong>Conceptual structure and navigation logic.</strong> When the system's model matches the user's, the interface becomes predictable; that is what "intuitive" means operationally.</p>
+    </div>
+  </article>
+
+  <article class="channel">
+    <div class="ch-id">03</div>
+    <div class="ch-in">
+      <h2>Taxonomy</h2>
+      <p>Establishes the controlled vocabulary: what things are called, which categories exist, and how they nest. In enterprise domains, vocabulary is contested territory.</p>
+    </div>
+    <div class="ch-out">
+      <div class="governs">Governs</div>
+      <p><strong>Labels and findability.</strong> Nav items, column headers, filter names, statuses, and search behavior all inherit from the taxonomy; weak taxonomy means "miscellaneous" buckets and failed queries.</p>
+    </div>
+  </article>
+
+  <article class="channel">
+    <div class="ch-id">04</div>
+    <div class="ch-in">
+      <h2>Taxonomy Facets</h2>
+      <p>Identifies the orthogonal dimensions of each entity (geography, time, type, status) so one data set can serve many retrieval paths.</p>
+    </div>
+    <div class="ch-out">
+      <div class="governs">Governs</div>
+      <p><strong>Filtering and refinement.</strong> The filter panel, advanced search, saved views, and table columns; the answer to "what filters should this have?" is never found at the screen level.</p>
+    </div>
+  </article>
+
+  <article class="channel">
+    <div class="ch-id">05</div>
+    <div class="ch-in">
+      <h2>Information Hierarchy</h2>
+      <p>Ranks everything a screen could show by frequency, criticality, and task position; grounded in observed behavior, not stakeholder opinion.</p>
+    </div>
+    <div class="ch-out">
+      <div class="governs">Governs</div>
+      <p><strong>Layout, emphasis, and disclosure.</strong> Reading order, visual weight, summary versus detail. A defensible hierarchy is what lets a designer say no; an instrument panel is this principle made visual.</p>
+    </div>
+  </article>
+
+  <section class="synthesis">
     <div>
-      <p class="scn-label">User</p>
-      <div class="persona-row"><span class="who">Policy analyst</span></div>
-      <p>Comfortable with the concepts, not with series codes. Knows what "unemployment rate" and "CPI" mean; does not know that they map to LNS14000000 and CUUR0000SA0, and should not need to.</p>
+      <h3>Skip the research and you don't avoid the decisions. You make them by guesswork.</h3>
+      <p>In enterprise software, guesswork compounds into training costs, support load, error rates, and workarounds. Upstream modeling is what makes screens fast: the interface improves because the system behind it finally matches the work.</p>
+    </div>
+    <div class="gauges">
+      <div class="gauge">
+        <div class="value">62%</div>
+        <div class="label">Scheduling time reduction, entertainment scheduling platform</div>
+      </div>
+      <div class="gauge">
+        <div class="value">29%</div>
+        <div class="label">Clinician optimization time reduction, clinical decision support</div>
+      </div>
+      <div class="gauge">
+        <div class="value">72%</div>
+        <div class="label">Tech support dependency reduction</div>
+      </div>
     </div>
   </section>
 
-  <!-- Outcomes -->
-  <section class="outcomes">
-    <div class="metric">
-      <p class="m-label">Steps to a shared chart</p>
-      <div class="m-pair"><span class="m-before">8</span><span class="m-arrow">&rsaquo;</span><span class="m-after">5</span></div>
-    </div>
-    <div class="metric">
-      <p class="m-label">Separate tools or screens crossed</p>
-      <div class="m-pair"><span class="m-before">4+</span><span class="m-arrow">&rsaquo;</span><span class="m-after">1</span></div>
-    </div>
-    <div class="metric">
-      <p class="m-label">Series-ID lookups required</p>
-      <div class="m-pair"><span class="m-before">2</span><span class="m-arrow">&rsaquo;</span><span class="m-after">0</span></div>
-    </div>
-    <div class="metric">
-      <p class="m-label">Co-plotting two series</p>
-      <div class="m-pair"><span class="m-after word">In-tool, native</span></div>
-      <div class="m-pair" style="margin-top:3px"><span class="m-before">not possible</span></div>
-    </div>
-    <div class="metric">
-      <p class="m-label">How the result is shared</p>
-      <div class="m-pair"><span class="m-after word">Live permalink</span></div>
-      <div class="m-pair" style="margin-top:3px"><span class="m-before">screenshot</span></div>
-    </div>
-  </section>
-
-  <!-- Flow board -->
-  <section class="board">
-
-    <!-- BEFORE -->
-    <div class="lane before">
-      <div class="lane-head">
-        <div class="lh-l"><span class="dot"></span><h3>Current state</h3></div>
-        <span class="tag">8 steps / 2 dead ends</span>
-      </div>
-      <div class="lane-body">
-
-        <div class="step">
-          <span class="sn">01</span>
-          <div>
-            <b>Hunt for the right program</b>
-            <small>Unemployment sits under one subject area, CPI under another; no single "find an indicator" entry.</small>
-            <span class="flag">Subject-first IA, not task-first</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">02</span>
-          <div>
-            <b>Pick a data tool</b>
-            <small>Top Picks, One-Screen Search, Series Report, flat databases: the user must choose a tool before choosing data.</small>
-            <span class="flag">Tool choice precedes intent</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">03</span>
-          <div>
-            <b>Resolve the unemployment series</b>
-            <small>Select or type a series ID (LNS14000000) to retrieve the headline rate.</small>
-            <span class="flag">Requires knowing a code</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">04</span>
-          <div>
-            <b>Generate a single-series chart</b>
-            <small>The built-in chart plots one series with fixed options; no way to add a second indicator.</small>
-            <span class="flag stall">Back out to add CPI</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">05</span>
-          <div>
-            <b>Repeat the whole path for CPI</b>
-            <small>Return to program navigation, choose a tool again, resolve a second series ID (CUUR0000SA0).</small>
-            <span class="flag stall">Second full pass</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">06</span>
-          <div>
-            <b>Discover the two will not co-plot</b>
-            <small>Different programs render in different tools; there is no shared chart surface for both series.</small>
-            <span class="flag dead">Task blocked in-site</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">07</span>
-          <div>
-            <b>Export both to a spreadsheet</b>
-            <small>Download each series as CSV or XLSX, align the date columns by hand, build the comparison chart offline.</small>
-            <span class="flag">Work leaves the site</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">08</span>
-          <div>
-            <b>Share a screenshot</b>
-            <small>The colleague receives a static image; the chart is not reproducible and any revision is invisible.</small>
-            <span class="flag dead">No shareable, live state</span>
-          </div>
-        </div>
-
-      </div>
-      <div class="lane-foot">
-        <span class="fx">breaks on H1, H3, H7, H8</span> Visibility of system state, match to real tasks, flexibility, and recognition over recall all fail at the point the user tries to combine two indicators.
-      </div>
-    </div>
-
-    <!-- AFTER -->
-    <div class="lane after">
-      <div class="lane-head">
-        <div class="lh-l"><span class="dot"></span><h3>Redesigned flow</h3></div>
-        <span class="tag">5 steps / answer-first</span>
-      </div>
-      <div class="lane-body">
-
-        <div class="step">
-          <span class="sn">01</span>
-          <div>
-            <b>Search "unemployment"</b>
-            <small>Plain-language entry from anywhere on the site; no series ID, no program to pick first.</small>
-            <span class="good">Task-first entry</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">02</span>
-          <div>
-            <b>Add to chart</b>
-            <small>The name resolves to LNS14000000 invisibly and lands on the shared Indicator Detail page.</small>
-            <span class="good">Code resolved for the user</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">03</span>
-          <div>
-            <b>Add a second series</b>
-            <small>Type "CPI"; it joins the same chart on a shared or dual axis without leaving the page.</small>
-            <span class="good">Native co-plotting</span>
-          </div>
-        </div>
-
-        <div class="decision">
-          <span class="sn"><span>?</span></span>
-          <div>
-            <b>Revision in the latest release?</b>
-            <small>Yes: a revision marker and note appear at the affected point. No: the series renders clean.</small>
-            <span class="good">Revisions surfaced in context</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">04</span>
-          <div>
-            <b>Toggle overlays</b>
-            <small>Recession shading, dual axis, and window controls refine the view without a rebuild.</small>
-            <span class="good">Progressive refinement</span>
-          </div>
-        </div>
-
-        <div class="step">
-          <span class="sn">05</span>
-          <div>
-            <b>Copy permalink or embed</b>
-            <small>The full chart state lives in the URL; the colleague opens the exact live view, revisions included.</small>
-            <span class="good">Shareable, reproducible state</span>
-          </div>
-        </div>
-
-      </div>
-      <div class="lane-foot">
-        <span class="fx">resolves H1, H3, H7, H8</span> One tool, one page, one link: the single pre-set chart becomes a real multi-series builder and the shared state carries the revision context with it.
-      </div>
-    </div>
-
-  </section>
-
-  <p class="note">
-    <b>Reading this artifact.</b> Numbers on the outcomes strip are design targets derived from the task-flow redesign and heuristic audit for this case study, not measured results from a live A/B test. Step counts reflect the documented current-state and redesigned task flows for the compare-and-share indicator scenario. Series IDs (LNS14000000 unemployment rate, CUUR0000SA0 CPI) are real BLS identifiers shown to illustrate what the redesign hides from the user.
-  </p>
+  <footer class="footer-note">
+    <span>Gary &middot; Principal UX Designer &amp; Information Architect</span>
+    <span>PhD, Human Factors Engineering</span>
+  </footer>
 
 </div>
 </body>
 </html>
-
 
     </section>
 
